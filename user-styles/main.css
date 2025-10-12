@@ -1,0 +1,41 @@
+/**
+ * User Custom Styles
+ * 
+ * Add your custom styles here to override or extend the framework styles
+ */
+
+/* Example: Custom color scheme */
+/*
+.site-header {
+    background: #1a1a1a;
+}
+
+.site-footer {
+    background: #1a1a1a;
+}
+*/
+
+/* Example: Custom typography */
+/*
+body {
+    font-family: Georgia, serif;
+}
+*/
+
+/* Example: Custom button styles */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #3498db;
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #2980b9;
+    color: white !important;
+}
+
+/* Add your custom styles below */
