@@ -145,11 +145,11 @@
         },
         markdown: {
             name: 'Markdown',
-            defaultContent: '<div class="markdown-content"><p>Markdown content</p></div>',
+            defaultContent: '<div class="markdown-content">Markdown content</div>',
             fields: [
-                { name: 'content', label: 'Markdown Content', type: 'textarea', default: '# Heading\n\nParagraph text here.' }
+                { name: 'content', label: 'Markdown File Path', type: 'text', default: 'documentation/README.md' }
             ]
-        }
+        },
     };
 
     // Initialize

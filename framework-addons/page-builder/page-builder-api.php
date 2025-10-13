@@ -478,14 +478,67 @@ function generateBlockCode($block) {
             break;
             
         case 'accordion':
-            $title = isset($data['title']) ? $data['title'] : 'Accordion Section';
-            $content = isset($data['content']) ? $data['content'] : 'Accordion content';
+            $sections = isset($data['sections']) ? $data['sections'] : [['title' => 'Section 1', 'content' => 'Content 1']];
             $code .= "    echo block_accordion([\n";
-            $code .= "        [\n";
-            $code .= "            'title' => '" . addslashes($title) . "',\n";
-            $code .= "            'content' => '" . addslashes($content) . "'\n";
-            $code .= "        ]\n";
+            foreach ($sections as $section) {
+                $code .= "        [\n";
+                $code .= "            'title' => '" . addslashes($section['title']) . "',\n";
+                $code .= "            'content' => '" . addslashes($section['content']) . "'\n";
+                $code .= "        ],\n";
+            }
             $code .= "    ]);\n";
+            break;
+            
+        case 'slider':
+            $slides = isset($data['slides']) ? $data['slides'] : [['src' => 'https://placehold.co/800x400', 'alt' => 'Slide 1']];
+            $autoplay = isset($data['autoplay']) ? $data['autoplay'] : true;
+            $code .= "    echo block_slider([\n";
+            foreach ($slides as $slide) {
+                $code .= "        [\n";
+                $code .= "            'src' => '" . addslashes($slide['src']) . "',\n";
+                $code .= "            'alt' => '" . addslashes($slide['alt']) . "'\n";
+                $code .= "        ],\n";
+            }
+            $autoplayStr = $autoplay ? 'true' : 'false';
+            $code .= "    ], 'image', ['autoplay' => {$autoplayStr}]);\n";
+            break;
+            
+        case 'menu':
+            $orientation = isset($data['orientation']) ? $data['orientation'] : 'horizontal';
+            $style = isset($data['style']) ? $data['style'] : 'simple';
+            $code .= "    echo block_menu([\n";
+            $code .= "        ['text' => 'Home', 'url' => '#'],\n";
+            $code .= "        ['text' => 'About', 'url' => '#'],\n";
+            $code .= "        ['text' => 'Contact', 'url' => '#']\n";
+            $code .= "    ], '{$orientation}', '{$style}');\n";
+            break;
+            
+        case 'social':
+            $platforms = isset($data['platforms']) ? $data['platforms'] : 'facebook,twitter,instagram';
+            $socialStyle = isset($data['style']) ? $data['style'] : 'icon';
+            $platformArray = explode(',', $platforms);
+            $code .= "    echo block_social_buttons([\n";
+            foreach ($platformArray as $platform) {
+                $platform = trim($platform);
+                $code .= "        ['platform' => '{$platform}', 'url' => '#'],\n";
+            }
+            $code .= "    ], '{$socialStyle}');\n";
+            break;
+            
+        case 'logo':
+            $text = isset($data['text']) ? $data['text'] : 'LOGO';
+            $src = isset($data['src']) ? $data['src'] : '';
+            $code .= "    echo block_logo([\n";
+            if ($src) {
+                $code .= "        'image' => '" . addslashes($src) . "',\n";
+            }
+            $code .= "        'text' => '" . addslashes($text) . "'\n";
+            $code .= "    ]);\n";
+            break;
+            
+        case 'markdown':
+            $src = isset($data['content']) ? $data['content'] : 'documentation/README.md';
+            $code .= "    echo block_markdown('" . addslashes($src) . "');\n";
             break;
             
         case 'form':
