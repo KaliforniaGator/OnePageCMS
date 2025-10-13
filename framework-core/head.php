@@ -72,7 +72,8 @@ $fullTitle = $pageTitle ? "$defaultTitle | $pageTitle" : $defaultTitle;
     
     <?php
     // Load addon styles
-    $addonStyles = load_addon_styles();
+    $addonLoader = get_addon_loader();
+    $addonStyles = $addonLoader->loadGlobalStyles();
     foreach ($addonStyles as $styleUrl) {
         echo '<link rel="stylesheet" href="' . htmlspecialchars($styleUrl) . '">' . "\n    ";
     }

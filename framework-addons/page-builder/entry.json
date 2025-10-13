@@ -21,7 +21,7 @@
     "styles": [
       {
         "file": "page-builder.css",
-        "scope": "page-only"
+        "scope": "global"
       }
     ],
     "api": {

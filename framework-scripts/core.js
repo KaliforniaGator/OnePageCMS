@@ -7,7 +7,11 @@
     'use strict';
     
     // Framework object - namespaced to avoid conflicts
-    window.OnePageCMS = window.OnePageCMS || {
+    // Preserve existing properties (like addonRoutes set by inline script)
+    window.OnePageCMS = window.OnePageCMS || {};
+    
+    // Extend with framework methods
+    Object.assign(window.OnePageCMS, {
         version: '1.0.0',
         
         /**
@@ -15,10 +19,40 @@
          */
         init: function() {
             // Silent initialization - no console logs to avoid clutter
+            this.markAddonLinks();
             this.highlightCurrentPage();
             this.initPageTransitions();
             this.initBrowserNavigation();
             this.initAlerts();
+        },
+        
+        /**
+         * Mark addon links with data-no-ajax attribute
+         * This ensures addon pages load with full page refresh to load their scripts
+         */
+        markAddonLinks: function() {
+            if (!this.addonRoutes || this.addonRoutes.length === 0) {
+                return;
+            }
+            
+            // Find all links that point to addon routes
+            const allLinks = document.querySelectorAll('a[href*="?page="]');
+            
+            allLinks.forEach(function(link) {
+                const href = link.getAttribute('href');
+                if (!href) return;
+                
+                // Extract the page parameter value
+                const match = href.match(/[?&]page=([^&]+)/);
+                if (match && match[1]) {
+                    const pageRoute = match[1];
+                    
+                    // Check if this route matches any addon route
+                    if (window.OnePageCMS.addonRoutes.includes(pageRoute)) {
+                        link.setAttribute('data-no-ajax', '');
+                    }
+                }
+            });
         },
         
         /**
@@ -98,6 +132,11 @@
             
             internalLinks.forEach(function(link) {
                 link.addEventListener('click', function(e) {
+                    // Skip AJAX loading if data-no-ajax attribute is present
+                    if (this.hasAttribute('data-no-ajax')) {
+                        return; // Allow normal navigation
+                    }
+                    
                     // Only apply transition if not opening in new tab
                     if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
                         e.preventDefault();
@@ -165,6 +204,9 @@
                         // Re-attach transition listeners to new links
                         self.attachTransitionListeners(pageContainer, transitionClass);
                         
+                        // Mark addon links in the new content
+                        self.markAddonLinks();
+                        
                         // Scroll to top
                         window.scrollTo(0, 0);
                         
@@ -196,7 +238,7 @@
                 self.loadPageContent(window.location.href, pageContainer, transitionClass);
             });
         }
-    };
+    });
     
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {

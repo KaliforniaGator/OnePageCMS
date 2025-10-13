@@ -25,12 +25,6 @@ require_once __DIR__ . '/includes/blocks.php';
 // Load addon system
 require_once __DIR__ . '/includes/addon-loader.php';
 
-// Load addon controls (determines which addons load globally vs on-demand)
-require_once __DIR__ . '/includes/addon-controls.php';
-
-// Load addon style loader
-require_once __DIR__ . '/includes/addon-style-loader.php';
-
 // Start output buffering to capture page content
 ob_start();
 
@@ -53,6 +47,15 @@ $pageContent = ob_get_clean();
 <?php include __DIR__ . '/framework-core/head.php'; ?>
 <body>
     <?php echo $pageContent; ?>
+    
+    <!-- Addon Routes Data for JavaScript -->
+    <script>
+        // Set addon routes before core.js loads
+        (function() {
+            window.OnePageCMS = window.OnePageCMS || {};
+            window.OnePageCMS.addonRoutes = <?php echo json_encode(get_addon_routes()); ?>;
+        })();
+    </script>
     
     <!-- Framework Scripts -->
     <script src="/framework-scripts/core.js"></script>

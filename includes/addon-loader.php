@@ -102,6 +102,27 @@ class AddonLoader {
     }
     
     /**
+     * Load global styles (styles that should be loaded on every page)
+     */
+    public function loadGlobalStyles() {
+        $styles = [];
+        
+        foreach ($this->addons as $addon) {
+            if (isset($addon['load']['styles'])) {
+                foreach ($addon['load']['styles'] as $style) {
+                    $scope = isset($style['scope']) ? $style['scope'] : 'global';
+                    
+                    if ($scope === 'global') {
+                        $styles[] = '/framework-addons/' . $addon['id'] . '/' . $style['file'];
+                    }
+                }
+            }
+        }
+        
+        return $styles;
+    }
+    
+    /**
      * Load global config files
      */
     public function loadGlobalConfigs() {
@@ -231,4 +252,22 @@ function get_addons() {
  */
 function get_addon_menu_items() {
     return $GLOBALS['addonLoader']->getAddonMenuItems();
+}
+
+/**
+ * Get all addon page routes (for JavaScript to identify addon links)
+ */
+function get_addon_routes() {
+    $addonLoader = get_addon_loader();
+    $addons = $addonLoader->getAddons();
+    $routes = [];
+    
+    foreach ($addons as $addon) {
+        if (isset($addon['load']['page'])) {
+            $route = isset($addon['load']['page']['route']) ? $addon['load']['page']['route'] : $addon['id'];
+            $routes[] = $route;
+        }
+    }
+    
+    return $routes;
 }
