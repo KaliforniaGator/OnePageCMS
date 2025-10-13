@@ -22,6 +22,15 @@ require_once __DIR__ . '/includes/page-meta.php';
 // Load blocks system
 require_once __DIR__ . '/includes/blocks.php';
 
+// Load addon system
+require_once __DIR__ . '/includes/addon-loader.php';
+
+// Load addon controls (determines which addons load globally vs on-demand)
+require_once __DIR__ . '/includes/addon-controls.php';
+
+// Load addon style loader
+require_once __DIR__ . '/includes/addon-style-loader.php';
+
 // Start output buffering to capture page content
 ob_start();
 
@@ -51,5 +60,16 @@ $pageContent = ob_get_clean();
     
     <!-- User Scripts -->
     <script src="/user-scripts/main.js"></script>
+    
+    <?php
+    // Load global addon scripts
+    $addonLoader = get_addon_loader();
+    $globalScripts = $addonLoader->loadGlobalScripts();
+    foreach ($globalScripts as $script) {
+        $defer = $script['defer'] ? ' defer' : '';
+        $async = $script['async'] ? ' async' : '';
+        echo '<script src="' . htmlspecialchars($script['url']) . '"' . $defer . $async . '></script>' . "\n    ";
+    }
+    ?>
 </body>
 </html>

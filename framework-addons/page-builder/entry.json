@@ -1,0 +1,41 @@
+{
+  "name": "Page Builder",
+  "version": "1.0.0",
+  "description": "Visual drag-and-drop page builder for creating pages without code",
+  "author": "OnePageCMS",
+  "type": "page",
+  "enabled": true,
+  "load": {
+    "page": {
+      "file": "page-builder.php",
+      "route": "page-builder",
+      "title": "Page Builder",
+      "menu": {
+        "show": true,
+        "label": "Page Builder",
+        "icon": "fas fa-hammer",
+        "position": 100
+      }
+    },
+    "scripts": [],
+    "styles": [
+      {
+        "file": "page-builder.css",
+        "scope": "page-only"
+      }
+    ],
+    "api": {
+      "file": "page-builder-api.php",
+      "route": "page-builder-api"
+    }
+  },
+  "dependencies": {
+    "blocks": true,
+    "font-awesome": true
+  },
+  "permissions": {
+    "create_pages": true,
+    "edit_pages": true,
+    "delete_pages": true
+  }
+}

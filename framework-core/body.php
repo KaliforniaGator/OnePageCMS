@@ -35,26 +35,35 @@ $containerClass = trim("container layout-$layoutClass $paddingClass $transitionC
         // Remove any leading/trailing slashes
         $page = trim($page, '/');
 
-        // Build the page path
-        $pagePath = '';
-        if (!empty($page)) {
-            // First check if it's a directory with an index.php
-            $dirIndexPath = PAGES_DIR . '/' . $page . '/index.php';
-            if (file_exists($dirIndexPath)) {
-                $pagePath = $dirIndexPath;
-            } else {
-                // Otherwise check if it's a direct .php file
-                $pagePath = PAGES_DIR . '/' . $page . '.php';
-            }
-        } else {
-            // Default to home page
-            $pagePath = PAGES_DIR . '/home.php';
+        // Check if this is an addon page first
+        $addonLoader = get_addon_loader();
+        $isAddonPage = false;
+        
+        if (!empty($page) && $addonLoader->handleAddonPage($page)) {
+            $isAddonPage = true;
         }
+        
+        if (!$isAddonPage) {
+            // Build the page path
+            $pagePath = '';
+            if (!empty($page)) {
+                // First check if it's a directory with an index.php
+                $dirIndexPath = PAGES_DIR . '/' . $page . '/index.php';
+                if (file_exists($dirIndexPath)) {
+                    $pagePath = $dirIndexPath;
+                } else {
+                    // Otherwise check if it's a direct .php file
+                    $pagePath = PAGES_DIR . '/' . $page . '.php';
+                }
+            } else {
+                // Default to home page
+                $pagePath = PAGES_DIR . '/home.php';
+            }
 
-        // Load the page if it exists, otherwise show 404
-        if (file_exists($pagePath)) {
-            include $pagePath;
-        } else {
+            // Load the page if it exists, otherwise show 404
+            if (file_exists($pagePath)) {
+                include $pagePath;
+            } else {
             // Set 404 metadata
             set_page_meta([
                 'title' => '404 - Page Not Found',
@@ -70,6 +79,7 @@ $containerClass = trim("container layout-$layoutClass $paddingClass $transitionC
                 <p><a href="/">Return to Home</a></p>
             </article>
             <?php
+            }
         }
         ?>
     </div>

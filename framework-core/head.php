@@ -71,6 +71,12 @@ $fullTitle = $pageTitle ? "$defaultTitle | $pageTitle" : $defaultTitle;
     <link rel="stylesheet" href="/user-styles/main.css">
     
     <?php
+    // Load addon styles
+    $addonStyles = load_addon_styles();
+    foreach ($addonStyles as $styleUrl) {
+        echo '<link rel="stylesheet" href="' . htmlspecialchars($styleUrl) . '">' . "\n    ";
+    }
+    
     // Allow pages to add custom head content
     if (isset($page_meta['custom_head'])) {
         echo $page_meta['custom_head'];

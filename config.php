@@ -13,6 +13,7 @@ define('SITE_URL', 'http://localhost:8000');
 // Paths
 define('BASE_PATH', __DIR__);
 define('PAGES_DIR', BASE_PATH . '/pages');
+define('ADDONS_DIR', BASE_PATH . '/framework-addons');
 
 // Layout Settings
 define('PAGE_LAYOUT', 'boxed'); // Options: 'boxed', 'full-width'

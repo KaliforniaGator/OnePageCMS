@@ -27,7 +27,17 @@ set_page_meta([
     </ul>
     
     <h2>Getting Started</h2>
-    <p>To create a new page, simply add a PHP file to the <code>pages/</code> directory. For example:</p>
+    
+    <h3>Visual Page Builder</h3>
+    <p>Create pages visually with our drag-and-drop page builder - no coding required!</p>
+    <p>
+        <a href="/?page=page-builder" class="btn btn-primary">
+            <i class="fas fa-hammer"></i> Open Page Builder
+        </a>
+    </p>
+    
+    <h3>Manual Page Creation</h3>
+    <p>Or add pages manually by creating PHP files in the <code>pages/</code> directory:</p>
     <ul>
         <li><code>pages/about.php</code> - accessible at <code>/?page=about</code></li>
         <li><code>pages/contact.php</code> - accessible at <code>/?page=contact</code></li>
@@ -51,7 +61,8 @@ set_page_meta([
     <ul>
         <li>Adding custom styles to <code>user-styles/main.css</code></li>
         <li>Adding custom scripts to <code>user-scripts/main.js</code></li>
-        <li>Modifying the templates in <code>header.php</code>, <code>body.php</code>, and <code>footer.php</code></li>
+        <li>Modifying header and footer in <code>elements/</code> directory</li>
+        <li>Adding pages in the <code>pages/</code> directory</li>
     </ul>
     
     <h2>Explore Components</h2>
