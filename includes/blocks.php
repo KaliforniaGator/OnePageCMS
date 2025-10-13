@@ -13,6 +13,7 @@ $blockFiles = [
     'media.php',
     'slider.php',
     'textview.php',
+    'alert.php',
     'menu.php',
     'hero.php',
     'social.php',

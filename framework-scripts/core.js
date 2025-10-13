@@ -18,6 +18,23 @@
             this.highlightCurrentPage();
             this.initPageTransitions();
             this.initBrowserNavigation();
+            this.initAlerts();
+        },
+        
+        /**
+         * Initialize alert functionality
+         */
+        initAlerts: function() {
+            // Auto-dismiss toasts with duration
+            const toasts = document.querySelectorAll('.alert-style-toast[data-duration]');
+            toasts.forEach(function(toast) {
+                const duration = parseInt(toast.getAttribute('data-duration'));
+                if (duration > 0) {
+                    setTimeout(function() {
+                        window.dismissAlert(toast.id);
+                    }, duration);
+                }
+            });
         },
         
         /**
@@ -189,4 +206,21 @@
     } else {
         OnePageCMS.init();
     }
+    
+    /**
+     * Global function to dismiss alerts
+     * Can be called from inline onclick handlers
+     */
+    window.dismissAlert = function(alertId) {
+        const alert = document.getElementById(alertId);
+        if (!alert) return;
+        
+        // Add dismissing class for animation
+        alert.classList.add('alert-dismissing');
+        
+        // Remove the alert after animation completes
+        setTimeout(function() {
+            alert.remove();
+        }, 300);
+    };
 })();

@@ -39,29 +39,4 @@ function block_textview($content, $format = 'paragraph', $options = []) {
     }
 }
 
-/**
- * Alert Block
- * Displays alert/notification messages
- * 
- * @param string $message - Alert message
- * @param string $type - Alert type: 'info', 'success', 'warning', 'error' (default: 'info')
- * @param bool $dismissible - Whether alert can be dismissed (default: false)
- */
-
-function block_alert($message, $type = 'info', $dismissible = false) {
-    $classes = "block-alert alert-$type";
-    if ($dismissible) {
-        $classes .= " alert-dismissible";
-    }
-    
-    $html = "<div class=\"$classes\" role=\"alert\">";
-    $html .= "<span class=\"alert-message\">$message</span>";
-    
-    if ($dismissible) {
-        $html .= "<button class=\"alert-close\" onclick=\"this.parentElement.style.display='none'\">&times;</button>";
-    }
-    
-    $html .= "</div>";
-    return $html;
-}
 ?>

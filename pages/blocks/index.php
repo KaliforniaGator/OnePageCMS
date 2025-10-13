@@ -88,12 +88,55 @@
     <!-- Alerts -->
     <section style="margin: 3rem 0; padding: 2rem; background: #f8f9fa; border-radius: 8px;">
         <h2>Alerts</h2>
+        
+        <h3>Alert Types</h3>
         <?php
-        echo block_alert('This is an informational message.', 'info', true);
-        echo block_alert('Success! Your action was completed.', 'success', true);
-        echo block_alert('Warning: Please review this information.', 'warning', true);
-        echo block_alert('Error: Something went wrong.', 'error', true);
+        echo block_alert([
+            'message' => 'This is an informational message.',
+            'type' => 'info',
+            'style' => 'inline'
+        ]);
+        echo block_alert([
+            'message' => 'Success! Your action was completed.',
+            'type' => 'success',
+            'style' => 'inline'
+        ]);
+        echo block_alert([
+            'message' => 'Warning: Please review this information.',
+            'type' => 'warning',
+            'style' => 'inline'
+        ]);
+        echo block_alert([
+            'message' => 'Error: Something went wrong.',
+            'type' => 'error',
+            'style' => 'inline'
+        ]);
         ?>
+        
+        <h3 style="margin-top: 2rem;">Alert with Title</h3>
+        <?php
+        echo block_alert([
+            'title' => 'Important Notice',
+            'message' => 'This alert has a title to draw more attention.',
+            'type' => 'warning',
+            'style' => 'inline'
+        ]);
+        ?>
+        
+        <h3 style="margin-top: 2rem;">Banner Alert</h3>
+        <?php
+        echo block_alert([
+            'message' => 'This is a full-width banner alert.',
+            'type' => 'info',
+            'style' => 'banner'
+        ]);
+        ?>
+        
+        <h3 style="margin-top: 2rem;">Toast Notification (Click to trigger)</h3>
+        <button class="btn btn-primary" onclick="showToastDemo()">Show Toast</button>
+        
+        <h3 style="margin-top: 2rem;">Popup Alert (Click to trigger)</h3>
+        <button class="btn btn-secondary" onclick="showPopupDemo()">Show Popup</button>
     </section>
     
     <!-- Text Views -->
@@ -469,3 +512,35 @@ echo block_form([
     
     <p style="margin-top: 2rem;"><a href="/" class="btn btn-primary">Back to Home</a></p>
 </article>
+
+<script>
+function showToastDemo() {
+    // Create toast alert dynamically
+    var alertHtml = <?php echo json_encode(block_alert([
+        'message' => 'This is a toast notification!',
+        'type' => 'success',
+        'style' => 'toast',
+        'position' => 'top-right',
+        'duration' => 5000
+    ])); ?>;
+    
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = alertHtml;
+    document.body.appendChild(tempDiv.firstChild);
+}
+
+function showPopupDemo() {
+    // Create popup alert dynamically
+    var alertHtml = <?php echo json_encode(block_alert([
+        'title' => 'Popup Alert',
+        'message' => 'This is a popup alert that appears in the center.',
+        'type' => 'warning',
+        'style' => 'popup',
+        'position' => 'top-center'
+    ])); ?>;
+    
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = alertHtml;
+    document.body.appendChild(tempDiv.firstChild);
+}
+</script>
