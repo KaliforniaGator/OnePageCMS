@@ -19,6 +19,19 @@ body {
     padding: 0 var(--spacing-lg);
 }
 
+/* Layout Options */
+.layout-full-width {
+    max-width: 100%;
+}
+
+.layout-boxed {
+    max-width: 1200px;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
 /* Header Styles */
 .site-header {
     background: var(--color-bg-dark);
@@ -65,6 +78,345 @@ body {
 .site-content {
     flex: 1;
     padding: var(--spacing-xl) 0;
+}
+
+/* No padding layout adjustments */
+.site-content.no-padding {
+    padding: 0 !important;
+}
+
+.container.no-padding {
+    padding: 0 !important;
+}
+
+.no-padding .page-content {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: var(--spacing-xl) !important;
+}
+
+/* Full-width no-padding: page content takes full width */
+.layout-full-width.no-padding .page-content {
+    max-width: 100%;
+    margin: 0;
+}
+
+/* Page Transitions */
+#page-container {
+    position: relative;
+    display: block;
+}
+
+/* Fade Transition */
+.page-transition-fade {
+    animation: fadeIn 0.4s ease-in-out forwards !important;
+}
+
+.page-transition-fade.page-transition-out {
+    animation: fadeOut 0.4s ease-in-out forwards !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Slide Transition (default: slide from right) */
+.page-transition-slide {
+    animation: slideIn 0.4s ease-out forwards !important;
+}
+
+.page-transition-slide.page-transition-out {
+    animation: slideOut 0.4s ease-in forwards !important;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+}
+
+/* Slide Up Transition */
+.page-transition-slide-up {
+    animation: slideUpIn 0.4s ease-out forwards !important;
+}
+
+.page-transition-slide-up.page-transition-out {
+    animation: slideUpOut 0.4s ease-in forwards !important;
+}
+
+@keyframes slideUpIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUpOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
+
+/* Slide Down Transition */
+.page-transition-slide-down {
+    animation: slideDownIn 0.4s ease-out forwards !important;
+}
+
+.page-transition-slide-down.page-transition-out {
+    animation: slideDownOut 0.4s ease-in forwards !important;
+}
+
+@keyframes slideDownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDownOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+}
+
+/* Slide Right Transition */
+.page-transition-slide-right {
+    animation: slideRightIn 0.4s ease-out forwards !important;
+}
+
+.page-transition-slide-right.page-transition-out {
+    animation: slideRightOut 0.4s ease-in forwards !important;
+}
+
+@keyframes slideRightIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRightOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+}
+
+/* Zoom Transition (zoom out on exit, zoom in on entry) */
+.page-transition-zoom {
+    animation: zoomIn 0.4s ease-out forwards !important;
+}
+
+.page-transition-zoom.page-transition-out {
+    animation: zoomOut 0.4s ease-in forwards !important;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.15);
+    }
+}
+
+/* Zoom-In Transition (zoom in on exit, zoom out on entry) */
+.page-transition-zoom-in {
+    animation: zoomInReverse 0.4s ease-out forwards !important;
+}
+
+.page-transition-zoom-in.page-transition-out {
+    animation: zoomInOut 0.4s ease-in forwards !important;
+}
+
+@keyframes zoomInReverse {
+    from {
+        opacity: 0;
+        transform: scale(1.15);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomInOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+}
+
+/* Flip Transition (horizontal flip from left) */
+.page-transition-flip {
+    animation: flipIn 0.5s ease-out forwards !important;
+    transform-style: preserve-3d !important;
+    perspective: 1000px !important;
+}
+
+.page-transition-flip.page-transition-out {
+    animation: flipOut 0.5s ease-in forwards !important;
+}
+
+@keyframes flipIn {
+    from {
+        opacity: 0;
+        transform: perspective(1000px) rotateY(-90deg);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(1000px) rotateY(0deg);
+    }
+}
+
+@keyframes flipOut {
+    from {
+        opacity: 1;
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    to {
+        opacity: 0;
+        transform: perspective(1000px) rotateY(90deg);
+    }
+}
+
+/* Inverse Flip Transition (horizontal flip from right) */
+.page-transition-inverse-flip {
+    animation: inverseFlipIn 0.5s ease-out forwards !important;
+    transform-style: preserve-3d !important;
+    perspective: 1000px !important;
+}
+
+.page-transition-inverse-flip.page-transition-out {
+    animation: inverseFlipOut 0.5s ease-in forwards !important;
+}
+
+@keyframes inverseFlipIn {
+    from {
+        opacity: 0;
+        transform: perspective(1000px) rotateY(90deg);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(1000px) rotateY(0deg);
+    }
+}
+
+@keyframes inverseFlipOut {
+    from {
+        opacity: 1;
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    to {
+        opacity: 0;
+        transform: perspective(1000px) rotateY(-90deg);
+    }
+}
+
+/* Vertical Flip Transition */
+.page-transition-vertical-flip {
+    animation: verticalFlipIn 0.5s ease-out forwards !important;
+    transform-style: preserve-3d !important;
+    perspective: 1000px !important;
+}
+
+.page-transition-vertical-flip.page-transition-out {
+    animation: verticalFlipOut 0.5s ease-in forwards !important;
+}
+
+@keyframes verticalFlipIn {
+    from {
+        opacity: 0;
+        transform: perspective(1000px) rotateX(-90deg);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(1000px) rotateX(0deg);
+    }
+}
+
+@keyframes verticalFlipOut {
+    from {
+        opacity: 1;
+        transform: perspective(1000px) rotateX(0deg);
+    }
+    to {
+        opacity: 0;
+        transform: perspective(1000px) rotateX(90deg);
+    }
 }
 
 /* Footer Styles */
@@ -176,6 +528,7 @@ body {
 
 .page-content code {
     background: var(--color-gray-100);
+    color: var(--color-text-primary);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
     font-family: var(--font-family-mono);
@@ -184,10 +537,17 @@ body {
 
 .page-content pre {
     background: var(--color-gray-100);
+    color: var(--color-text-primary);
     padding: var(--spacing-md);
     border-radius: var(--radius-sm);
     overflow-x: auto;
     margin-bottom: var(--spacing-md);
+}
+
+.page-content pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
 }
 
 .page-content a {

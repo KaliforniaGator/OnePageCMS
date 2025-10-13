@@ -1,5 +1,19 @@
-<main class="site-content">
-    <div class="container">
+<?php
+$layoutClass = defined('PAGE_LAYOUT') ? PAGE_LAYOUT : 'boxed';
+$paddingClass = defined('PAGE_PADDING') && PAGE_PADDING === false ? 'no-padding' : '';
+
+// Add transition class based on config
+$transitionClass = '';
+if (defined('PAGE_TRANSITIONS') && PAGE_TRANSITIONS === true) {
+    $transitionType = defined('PAGE_TRANSITION_TYPE') ? PAGE_TRANSITION_TYPE : 'fade';
+    $transitionClass = 'page-transition-' . $transitionType;
+}
+
+$siteContentClass = trim("site-content $paddingClass");
+$containerClass = trim("container layout-$layoutClass $paddingClass $transitionClass");
+?>
+<main class="<?php echo $siteContentClass; ?>">
+    <div class="<?php echo $containerClass; ?>" id="page-container">
         <?php
         /**
          * Body Template

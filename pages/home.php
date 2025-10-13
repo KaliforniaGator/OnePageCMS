@@ -46,5 +46,11 @@
         <li>Modifying the templates in <code>header.php</code>, <code>body.php</code>, and <code>footer.php</code></li>
     </ul>
     
-    <p><a href="/?page=about" class="btn">Learn More</a></p>
+    <h2>Explore Components</h2>
+    <p>OnePage CMS comes with a comprehensive blocks system featuring buttons, forms, menus, heroes, sliders, and more!</p>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <a href="/?page=about" class="btn btn-primary">Learn More</a>
+        <a href="/?page=blocks" class="btn btn-success">View All Blocks</a>
+    </div>
 </article>

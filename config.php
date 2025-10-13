@@ -14,6 +14,24 @@ define('SITE_URL', 'http://localhost:8000');
 define('BASE_PATH', __DIR__);
 define('PAGES_DIR', BASE_PATH . '/pages');
 
+// Layout Settings
+define('PAGE_LAYOUT', 'boxed'); // Options: 'boxed', 'full-width'
+define('PAGE_PADDING', true); // Set to false to remove padding from page content
+
+// Page Transition Settings
+define('PAGE_TRANSITIONS', true); // Enable/disable page transitions
+define('PAGE_TRANSITION_TYPE', 'slide-down'); // Options:
+// - 'fade' - Simple fade in/out
+// - 'slide' - Slide from right (default slide)
+// - 'slide-up' - Slide from bottom
+// - 'slide-down' - Slide from top
+// - 'slide-right' - Slide from left
+// - 'zoom' - Zoom in on entry, zoom out on exit
+// - 'zoom-in' - Zoom out on entry, zoom in on exit
+// - 'flip' - Horizontal flip from left
+// - 'inverse-flip' - Horizontal flip from right
+// - 'vertical-flip' - Vertical flip from top
+
 // Debug mode
 define('DEBUG', true);
 

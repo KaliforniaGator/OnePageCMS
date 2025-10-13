@@ -16,6 +16,8 @@
         init: function() {
             // Silent initialization - no console logs to avoid clutter
             this.highlightCurrentPage();
+            this.initPageTransitions();
+            this.initBrowserNavigation();
         },
         
         /**
@@ -38,6 +40,144 @@
         getQueryParam: function(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
+        },
+        
+        /**
+         * Initialize page transitions
+         */
+        initPageTransitions: function() {
+            const pageContainer = document.getElementById('page-container');
+            if (!pageContainer) return;
+            
+            // Check if any transition class is present
+            const transitionClass = this.getTransitionClass(pageContainer);
+            if (!transitionClass) return;
+            
+            // Handle internal link clicks for smooth transitions
+            this.attachTransitionListeners(pageContainer, transitionClass);
+        },
+        
+        /**
+         * Get the transition class from the page container
+         */
+        getTransitionClass: function(pageContainer) {
+            const classes = pageContainer.className.split(' ');
+            for (let i = 0; i < classes.length; i++) {
+                if (classes[i].startsWith('page-transition-')) {
+                    return classes[i];
+                }
+            }
+            return null;
+        },
+        
+        /**
+         * Attach transition listeners to internal links
+         */
+        attachTransitionListeners: function(pageContainer, transitionClass) {
+            const self = this;
+            
+            // Get all internal links
+            const internalLinks = document.querySelectorAll('a[href^="/?page="], a[href^="?page="]');
+            
+            internalLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    // Only apply transition if not opening in new tab
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                        e.preventDefault();
+                        const href = this.getAttribute('href');
+                        
+                        // Get animation duration based on transition type
+                        let duration = 400; // default
+                        if (transitionClass.includes('flip') || 
+                            transitionClass.includes('inverse-flip') || 
+                            transitionClass.includes('vertical-flip')) {
+                            duration = 500;
+                        }
+                        
+                        // Add exit animation
+                        pageContainer.classList.add('page-transition-out');
+                        
+                        // Load new page content via AJAX
+                        setTimeout(function() {
+                            self.loadPageContent(href, pageContainer, transitionClass);
+                        }, duration);
+                    }
+                });
+            });
+        },
+        
+        /**
+         * Load page content via AJAX
+         */
+        loadPageContent: function(url, pageContainer, transitionClass) {
+            const self = this;
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    // Parse the HTML
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Get the new page content
+                    const newContent = doc.querySelector('#page-container');
+                    if (newContent) {
+                        // Update the page container content
+                        pageContainer.innerHTML = newContent.innerHTML;
+                        
+                        // Force a reflow to ensure the animation triggers
+                        void pageContainer.offsetWidth;
+                        
+                        // Remove exit animation and add entry animation
+                        pageContainer.classList.remove('page-transition-out');
+                        
+                        // Use requestAnimationFrame to ensure the class is added after the DOM update
+                        requestAnimationFrame(function() {
+                            pageContainer.classList.add(transitionClass);
+                        });
+                        
+                        // Update browser history
+                        window.history.pushState({}, '', url);
+                        
+                        // Update page title
+                        const newTitle = doc.querySelector('title');
+                        if (newTitle) {
+                            document.title = newTitle.textContent;
+                        }
+                        
+                        // Re-attach transition listeners to new links
+                        self.attachTransitionListeners(pageContainer, transitionClass);
+                        
+                        // Scroll to top
+                        window.scrollTo(0, 0);
+                        
+                        // Update active navigation
+                        self.highlightCurrentPage();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading page:', error);
+                    // Fallback to normal navigation
+                    window.location.href = url;
+                });
+        },
+        
+        /**
+         * Handle browser back/forward navigation
+         */
+        initBrowserNavigation: function() {
+            const self = this;
+            const pageContainer = document.getElementById('page-container');
+            
+            if (!pageContainer) return;
+            
+            const transitionClass = this.getTransitionClass(pageContainer);
+            if (!transitionClass) return;
+            
+            window.addEventListener('popstate', function(event) {
+                // Reload the page content without full refresh
+                self.loadPageContent(window.location.href, pageContainer, transitionClass);
+            });
         }
     };
     

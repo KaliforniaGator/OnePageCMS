@@ -7,6 +7,8 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/?page=about">About</a></li>
+                <li><a href="/?page=blocks">Blocks</a></li>
+                <li><a href="/?page=blog">Blog</a></li>
                 <li><a href="/?page=contact">Contact</a></li>
             </ul>
         </nav>
