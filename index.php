@@ -26,13 +26,13 @@ require_once __DIR__ . '/includes/blocks.php';
 ob_start();
 
 // Load header
-include __DIR__ . '/header.php';
+include __DIR__ . '/framework-core/header.php';
 
 // Load main content (this is where set_page_meta() is called)
-include __DIR__ . '/body.php';
+include __DIR__ . '/framework-core/body.php';
 
 // Load footer
-include __DIR__ . '/footer.php';
+include __DIR__ . '/framework-core/footer.php';
 
 // Get the buffered content
 $pageContent = ob_get_clean();
@@ -41,7 +41,7 @@ $pageContent = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include __DIR__ . '/head.php'; ?>
+<?php include __DIR__ . '/framework-core/head.php'; ?>
 <body>
     <?php echo $pageContent; ?>
     
