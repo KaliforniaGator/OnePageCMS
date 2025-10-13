@@ -1,5 +1,10 @@
 <header class="site-header">
     <div class="container">
+        <?php echo block_logo([
+            'text' => SITE_TITLE,
+            'link' => '/',
+            'class' => 'site-logo'
+        ]); ?>
         <h1 class="site-title"><?php echo SITE_TITLE; ?></h1>
         <p class="site-description"><?php echo SITE_DESCRIPTION; ?></p>
         

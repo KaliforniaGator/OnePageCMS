@@ -333,23 +333,26 @@ a.btn-outline:focus {
 .slider-wrapper {
     position: relative;
     width: 100%;
-    min-height: 400px;
+    padding-bottom: 50%;
+    height: 0;
+    overflow: hidden;
 }
 
 .slide {
-    display: none;
     width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
 }
 
 .slide.active {
-    display: block;
-    position: relative;
     opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
 }
 
 /* Slider Transition: Fade (default) */
@@ -365,24 +368,24 @@ a.btn-outline:focus {
 .slider-transition-slide .slide {
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
     transform: translateX(100%);
+    opacity: 0;
 }
 
 .slider-transition-slide .slide.active {
     transform: translateX(0);
-}
-
-.slider-transition-slide .slide.slide-out {
-    transform: translateX(-100%);
+    opacity: 1;
 }
 
 /* Slider Transition: Zoom */
 .slider-transition-zoom .slide {
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
     transform: scale(0.8);
+    opacity: 0;
 }
 
 .slider-transition-zoom .slide.active {
     transform: scale(1);
+    opacity: 1;
 }
 
 /* Slider Transition: Flip */
@@ -390,15 +393,18 @@ a.btn-outline:focus {
     transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
     transform: rotateY(90deg);
     transform-style: preserve-3d;
+    opacity: 0;
 }
 
 .slider-transition-flip .slide.active {
     transform: rotateY(0deg);
+    opacity: 1;
 }
 
 .slide img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
@@ -411,7 +417,7 @@ a.btn-outline:focus {
     color: white;
     padding: 1rem;
     text-align: center;
-    z-index: 5;
+    z-index: 10;
 }
 
 .slider-prev,

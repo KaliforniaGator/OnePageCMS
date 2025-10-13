@@ -17,7 +17,8 @@ $blockFiles = [
     'hero.php',
     'social.php',
     'card.php',
-    'accordion.php'
+    'accordion.php',
+    'logo.php'
 ];
 
 foreach ($blockFiles as $file) {
