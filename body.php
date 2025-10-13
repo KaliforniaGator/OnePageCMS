@@ -55,6 +55,12 @@ $containerClass = trim("container layout-$layoutClass $paddingClass $transitionC
         if (file_exists($pagePath)) {
             include $pagePath;
         } else {
+            // Set 404 metadata
+            set_page_meta([
+                'title' => '404 - Page Not Found',
+                'description' => 'The page you are looking for does not exist.'
+            ]);
+            
             // 404 Page Not Found
             ?>
             <article class="page-content error-404">

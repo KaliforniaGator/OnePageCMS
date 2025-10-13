@@ -3,6 +3,14 @@
  * Contact Page
  */
 
+// Set page metadata
+set_page_meta([
+    'title' => 'Contact Us',
+    'description' => 'Contact OnePage CMS - a lightweight, flexible content management framework designed for developers.',
+    'url' => SITE_URL . '/?page=contact',
+    'type' => 'website'
+]);
+
 // Handle form submission
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {

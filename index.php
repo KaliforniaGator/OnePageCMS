@@ -16,38 +16,34 @@ if (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER') && defined('D
     require_once __DIR__ . '/includes/class-db.php';
 }
 
+// Load page metadata helper
+require_once __DIR__ . '/includes/page-meta.php';
+
 // Load blocks system
 require_once __DIR__ . '/includes/blocks.php';
+
+// Start output buffering to capture page content
+ob_start();
+
+// Load header
+include __DIR__ . '/header.php';
+
+// Load main content (this is where set_page_meta() is called)
+include __DIR__ . '/body.php';
+
+// Load footer
+include __DIR__ . '/footer.php';
+
+// Get the buffered content
+$pageContent = ob_get_clean();
+
+// Now render the complete page with head that has access to page metadata
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITE_TITLE; ?></title>
-    <meta name="description" content="<?php echo SITE_DESCRIPTION; ?>">
-    
-    <!-- Framework Styles -->
-    <link rel="stylesheet" href="/framework-styles/reset.css">
-    <link rel="stylesheet" href="/framework-styles/theme.css">
-    <link rel="stylesheet" href="/framework-styles/layout.css">
-    <link rel="stylesheet" href="/framework-styles/blocks.css">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- User Styles -->
-    <link rel="stylesheet" href="/user-styles/main.css">
-</head>
+<?php include __DIR__ . '/head.php'; ?>
 <body>
-    <!-- Header Section -->
-    <?php include __DIR__ . '/header.php'; ?>
-    
-    <!-- Main Content Section -->
-    <?php include __DIR__ . '/body.php'; ?>
-    
-    <!-- Footer Section -->
-    <?php include __DIR__ . '/footer.php'; ?>
+    <?php echo $pageContent; ?>
     
     <!-- Framework Scripts -->
     <script src="/framework-scripts/core.js"></script>

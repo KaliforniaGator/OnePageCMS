@@ -4,6 +4,14 @@
  * Example of a page in a subdirectory
  */
 
+// Set page metadata
+set_page_meta([
+    'title' => 'Blog',
+    'description' => 'Read our blog about OnePage CMS - a lightweight, flexible content management framework designed for developers.',
+    'url' => SITE_URL . '/?page=blog',
+    'type' => 'website'
+]);
+
 // Sample blog posts (no database required)
 $posts = [
     [

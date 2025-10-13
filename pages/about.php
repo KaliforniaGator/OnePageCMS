@@ -2,6 +2,14 @@
 /**
  * About Page
  */
+
+// Set page metadata
+set_page_meta([
+    'title' => 'About Us',
+    'description' => 'Learn about OnePage CMS - a lightweight, flexible content management framework designed for developers.',
+    'url' => SITE_URL . '/?page=about',
+    'type' => 'website'
+]);
 ?>
 <article class="page-content">
     <h1>About OnePage CMS</h1>

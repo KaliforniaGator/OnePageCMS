@@ -2,6 +2,14 @@
 /**
  * Home Page
  */
+
+// Set page metadata
+set_page_meta([
+    'title' => 'Home',
+    'description' => SITE_DESCRIPTION,
+    'url' => SITE_URL,
+    'type' => 'website'
+]);
 ?>
 <article class="page-content">
     <h1>Welcome to OnePage CMS</h1>
