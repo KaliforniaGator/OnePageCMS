@@ -15,6 +15,9 @@ require_once __DIR__ . '/config.php';
 if (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER') && defined('DB_PASS')) {
     require_once __DIR__ . '/includes/class-db.php';
 }
+
+// Load blocks system
+require_once __DIR__ . '/includes/blocks.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +29,12 @@ if (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER') && defined('D
     
     <!-- Framework Styles -->
     <link rel="stylesheet" href="/framework-styles/reset.css">
+    <link rel="stylesheet" href="/framework-styles/theme.css">
     <link rel="stylesheet" href="/framework-styles/layout.css">
+    <link rel="stylesheet" href="/framework-styles/blocks.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <!-- User Styles -->
     <link rel="stylesheet" href="/user-styles/main.css">
@@ -43,6 +51,7 @@ if (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER') && defined('D
     
     <!-- Framework Scripts -->
     <script src="/framework-scripts/core.js"></script>
+    <script src="/framework-scripts/blocks.js"></script>
     
     <!-- User Scripts -->
     <script src="/user-scripts/main.js"></script>
