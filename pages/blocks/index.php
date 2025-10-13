@@ -142,11 +142,25 @@
     <!-- Text Views -->
     <section style="margin: 3rem 0; padding: 2rem; background: #f8f9fa; border-radius: 8px;">
         <h2>Text Views</h2>
+        <p>Display different types of formatted text content:</p>
         
+        <h3>Paragraph</h3>
         <?php
         echo block_textview('This is a regular paragraph with some text content.', 'paragraph');
+        ?>
+        
+        <h3 style="margin-top: 2rem;">Heading</h3>
+        <?php
         echo block_textview('Important Heading', 'heading', ['level' => 3]);
+        ?>
+        
+        <h3 style="margin-top: 2rem;">Quote</h3>
+        <?php
         echo block_textview('The only way to do great work is to love what you do.', 'quote', ['author' => 'Steve Jobs']);
+        ?>
+        
+        <h3 style="margin-top: 2rem;">Code Block (JavaScript Example)</h3>
+        <?php
         echo block_textview('function hello() {\n    console.log("Hello, World!");\n}', 'code', ['language' => 'javascript']);
         ?>
     </section>
