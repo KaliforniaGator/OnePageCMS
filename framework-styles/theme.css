@@ -5,9 +5,9 @@
 
 :root {
     /* Primary Colors */
-    --color-primary: #3498db;
-    --color-primary-dark: #2980b9;
-    --color-primary-light: #5dade2;
+    --color-primary: #3482db;
+    --color-primary-dark: #2957b9;
+    --color-primary-light: #5d92e2;
     
     /* Secondary Colors */
     --color-secondary: #95a5a6;
@@ -15,24 +15,24 @@
     --color-secondary-light: #bdc3c7;
     
     /* Success Colors */
-    --color-success: #2ecc71;
-    --color-success-dark: #27ae60;
+    --color-success: #2ecc8f;
+    --color-success-dark: #26d69e;
     --color-success-light: #58d68d;
     
     /* Danger/Error Colors */
-    --color-danger: #e74c3c;
-    --color-danger-dark: #c0392b;
-    --color-danger-light: #ec7063;
+    --color-danger: #e73c5e;
+    --color-danger-dark: #c02b35;
+    --color-danger-light: #ec6383;
     
     /* Warning Colors */
-    --color-warning: #f39c12;
-    --color-warning-dark: #d68910;
+    --color-warning: #f38612;
+    --color-warning-dark: #d65c10;
     --color-warning-light: #f5b041;
     
     /* Info Colors */
-    --color-info: #3498db;
-    --color-info-dark: #2980b9;
-    --color-info-light: #5dade2;
+    --color-info: #347cdb;
+    --color-info-dark: #2960b9;
+    --color-info-light: #5d89e2;
     
     /* Neutral Colors */
     --color-white: #ffffff;
@@ -59,7 +59,7 @@
     /* Background Colors */
     --color-bg-primary: #ffffff;
     --color-bg-secondary: #f5f5f5;
-    --color-bg-dark: #2c3e50;
+    --color-bg-dark: #183764;
     
     /* Border Colors */
     --color-border: #dddddd;

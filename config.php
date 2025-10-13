@@ -20,7 +20,7 @@ define('PAGE_PADDING', true); // Set to false to remove padding from page conten
 
 // Page Transition Settings
 define('PAGE_TRANSITIONS', true); // Enable/disable page transitions
-define('PAGE_TRANSITION_TYPE', 'slide-down'); // Options:
+define('PAGE_TRANSITION_TYPE', 'fade'); // Options:
 // - 'fade' - Simple fade in/out
 // - 'slide' - Slide from right (default slide)
 // - 'slide-up' - Slide from bottom
