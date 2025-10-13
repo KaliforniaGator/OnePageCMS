@@ -4,40 +4,27 @@
  * Example of a page in a subdirectory
  */
 
-// Get database instance
-$db = db();
-
-// Create blog posts table if it doesn't exist
-if (!$db->tableExists(DB_PREFIX . 'blog_posts')) {
-    $db->addTable(DB_PREFIX . 'blog_posts', [
-        'id' => 'INT AUTO_INCREMENT PRIMARY KEY',
-        'title' => 'VARCHAR(255) NOT NULL',
-        'content' => 'TEXT',
-        'author' => 'VARCHAR(100)',
-        'status' => 'VARCHAR(20) DEFAULT "published"',
-        'created_at' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
-    ]);
-    
-    // Insert sample posts
-    $db->insert(DB_PREFIX . 'blog_posts', [
-        'title' => 'Getting Started with WindSurf CMS',
-        'content' => 'Welcome to our blog! This is a sample post to demonstrate the blog functionality.',
+// Sample blog posts (no database required)
+$posts = [
+    [
+        'title' => 'Getting Started with OnePage CMS',
+        'content' => 'Welcome to our blog! This is a sample post to demonstrate the blog functionality. OnePage CMS is a lightweight framework that makes it easy to build simple websites without the complexity of traditional CMSs.',
         'author' => 'Admin',
-        'status' => 'published'
-    ]);
-    
-    $db->insert(DB_PREFIX . 'blog_posts', [
+        'created_at' => '2024-10-01 10:00:00'
+    ],
+    [
         'title' => 'Building Your First Page',
-        'content' => 'Learn how to create custom pages in the pages directory.',
+        'content' => 'Learn how to create custom pages in the pages directory. Simply create a new PHP file in the pages folder, and it will automatically be accessible through the page parameter in the URL.',
         'author' => 'Admin',
-        'status' => 'published'
-    ]);
-}
-
-// Get all published blog posts
-$posts = $db->getResults(
-    "SELECT * FROM " . DB_PREFIX . "blog_posts WHERE status = 'published' ORDER BY created_at DESC"
-);
+        'created_at' => '2024-10-05 14:30:00'
+    ],
+    [
+        'title' => 'Working with Subdirectories',
+        'content' => 'You can organize your pages into subdirectories for better structure. This blog page is a perfect example - it lives in pages/blog/index.php and is accessible via ?page=blog.',
+        'author' => 'Admin',
+        'created_at' => '2024-10-10 09:15:00'
+    ]
+];
 ?>
 <article class="page-content">
     <h1>Blog</h1>

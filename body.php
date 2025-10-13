@@ -16,17 +16,21 @@
         }
 
         // Sanitize the page parameter to prevent directory traversal
-        $page = str_replace(['..', '/', '\\'], '', $page);
+        // Remove .. and backslashes, but allow forward slashes for subdirectories
+        $page = str_replace(['..', '\\'], '', $page);
+        // Remove any leading/trailing slashes
+        $page = trim($page, '/');
 
         // Build the page path
         $pagePath = '';
         if (!empty($page)) {
-            // Check if it's a file in the pages directory
-            $pagePath = PAGES_DIR . '/' . $page . '.php';
-            
-            // If not found, check if it's a directory with an index.php
-            if (!file_exists($pagePath)) {
-                $pagePath = PAGES_DIR . '/' . $page . '/index.php';
+            // First check if it's a directory with an index.php
+            $dirIndexPath = PAGES_DIR . '/' . $page . '/index.php';
+            if (file_exists($dirIndexPath)) {
+                $pagePath = $dirIndexPath;
+            } else {
+                // Otherwise check if it's a direct .php file
+                $pagePath = PAGES_DIR . '/' . $page . '.php';
             }
         } else {
             // Default to home page

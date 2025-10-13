@@ -19,12 +19,14 @@ class Database {
     }
     
     /**
-     * Private constructor - establishes database connection
+     * Private constructor - establishes database connection if configured
      */
     private function __construct() {
         // Check if database constants are defined
         if (!defined('DB_HOST') || !defined('DB_NAME') || !defined('DB_USER') || !defined('DB_PASS')) {
-            throw new Exception('Database configuration not found. Please define DB_HOST, DB_NAME, DB_USER, and DB_PASS in config.php');
+            // Database is not configured - this is optional
+            $this->connection = null;
+            return;
         }
         
         try {
@@ -65,6 +67,11 @@ class Database {
      * @return PDOStatement|false
      */
     public function query($sql, $params = []) {
+        if (!$this->connection) {
+            $this->handleNoConnection();
+            return false;
+        }
+        
         try {
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($params);
@@ -104,9 +111,14 @@ class Database {
      * 
      * @param string $table Table name
      * @param array $data Associative array of column => value
-     * @return int Last insert ID
+     * @return int|false Last insert ID or false on failure
      */
     public function insert($table, $data) {
+        if (!$this->connection) {
+            $this->handleNoConnection();
+            return false;
+        }
+        
         $columns = implode(', ', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
         $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
@@ -239,6 +251,15 @@ class Database {
         } else {
             error_log("Database Error: " . $e->getMessage());
             die("A database error occurred. Please try again later.");
+        }
+    }
+    
+    /**
+     * Handle missing database connection
+     */
+    private function handleNoConnection() {
+        if (DEBUG) {
+            error_log("Database operation attempted but database is not configured. Please define DB_HOST, DB_NAME, DB_USER, and DB_PASS in config.php");
         }
     }
     
