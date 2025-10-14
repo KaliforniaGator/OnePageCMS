@@ -21,13 +21,9 @@
     "styles": [
       {
         "file": "page-builder.css",
-        "scope": "global"
+        "scope": "page"
       }
-    ],
-    "api": {
-      "file": "page-builder-api.php",
-      "route": "page-builder-api"
-    }
+    ]
   },
   "dependencies": {
     "blocks": true,

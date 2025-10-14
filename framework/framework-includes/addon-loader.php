@@ -123,6 +123,33 @@ class AddonLoader {
     }
     
     /**
+     * Load page-specific styles for the current page
+     */
+    public function loadPageStyles($currentPage) {
+        $styles = [];
+        
+        foreach ($this->addons as $addon) {
+            // Check if this addon provides the current page
+            if (isset($addon['load']['page'])) {
+                $route = isset($addon['load']['page']['route']) ? $addon['load']['page']['route'] : $addon['id'];
+                
+                // If this is the current page, load its page-scoped styles
+                if ($currentPage === $route && isset($addon['load']['styles'])) {
+                    foreach ($addon['load']['styles'] as $style) {
+                        $scope = isset($style['scope']) ? $style['scope'] : 'global';
+                        
+                        if ($scope === 'page') {
+                            $styles[] = '/addons/' . $addon['id'] . '/' . $style['file'];
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $styles;
+    }
+    
+    /**
      * Load global config files
      */
     public function loadGlobalConfigs() {

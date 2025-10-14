@@ -8,7 +8,7 @@
 // Site Settings
 define('SITE_TITLE', 'OnePage CMS');
 define('SITE_DESCRIPTION', 'A lightweight, flexible content management framework');
-define('SITE_URL', 'http://localhost:8000');
+define('SITE_URL', 'http://localhost:8080');
 
 // Paths
 define('BASE_PATH', __DIR__);

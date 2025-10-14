@@ -1,0 +1,39 @@
+{
+  "name": "Theme Editor",
+  "version": "1.0.0",
+  "description": "Visual editor for customizing theme.css properties with auto-save",
+  "author": "OnePageCMS",
+  "type": "page",
+  "enabled": true,
+  "load": {
+    "page": {
+      "file": "theme-editor.php",
+      "route": "theme-editor",
+      "title": "Theme Editor",
+      "menu": {
+        "show": true,
+        "label": "Theme Editor",
+        "icon": "fas fa-palette",
+        "position": 150
+      }
+    },
+    "scripts": [
+      {
+        "file": "theme-editor.js",
+        "scope": "page"
+      }
+    ],
+    "styles": [
+      {
+        "file": "theme-editor.css",
+        "scope": "page"
+      }
+    ]
+  },
+  "dependencies": {
+    "font-awesome": true
+  },
+  "permissions": {
+    "edit_theme": true
+  }
+}

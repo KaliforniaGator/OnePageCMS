@@ -36,6 +36,14 @@ set_page_meta([
         </a>
     </p>
     
+    <h3>Theme Editor</h3>
+    <p>Customize your site's theme visually by editing colors, typography, spacing, and more!</p>
+    <p>
+        <a href="/?page=theme-editor" class="btn btn-primary" data-no-ajax>
+            <i class="fas fa-palette"></i> Open Theme Editor
+        </a>
+    </p>
+    
     <h3>Manual Page Creation</h3>
     <p>Or add pages manually by creating PHP files in the <code>pages/</code> directory:</p>
     <ul>

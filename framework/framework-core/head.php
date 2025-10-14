@@ -76,11 +76,20 @@ $fullTitle = $pageTitle ? "$defaultTitle | $pageTitle" : $defaultTitle;
     ?>
     
     <?php
-    // Load addon styles
+    // Load global addon styles
     $addonLoader = get_addon_loader();
     $addonStyles = $addonLoader->loadGlobalStyles();
     foreach ($addonStyles as $styleUrl) {
         echo '<link rel="stylesheet" href="' . htmlspecialchars($styleUrl) . '">' . "\n    ";
+    }
+    
+    // Load page-specific addon styles
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : '';
+    if (!empty($currentPage)) {
+        $pageStyles = $addonLoader->loadPageStyles($currentPage);
+        foreach ($pageStyles as $styleUrl) {
+            echo '<link rel="stylesheet" href="' . htmlspecialchars($styleUrl) . '">' . "\n    ";
+        }
     }
     
     // Allow pages to add custom head content
