@@ -102,6 +102,39 @@ class AddonLoader {
     }
     
     /**
+     * Load page-specific scripts for the current page
+     */
+    public function loadPageScripts($currentPage) {
+        $scripts = [];
+        
+        foreach ($this->addons as $addon) {
+            // Check if this addon provides the current page
+            if (isset($addon['load']['page'])) {
+                $route = isset($addon['load']['page']['route']) ? $addon['load']['page']['route'] : $addon['id'];
+                
+                // If this is the current page, load its page-scoped scripts
+                if ($currentPage === $route && isset($addon['load']['scripts'])) {
+                    foreach ($addon['load']['scripts'] as $script) {
+                        $scope = isset($script['scope']) ? $script['scope'] : 'global';
+                        
+                        if ($scope === 'page') {
+                            $scripts[] = [
+                                'addon' => $addon['id'],
+                                'file' => $addon['path'] . '/' . $script['file'],
+                                'url' => '/addons/' . $addon['id'] . '/' . $script['file'],
+                                'defer' => isset($script['defer']) ? $script['defer'] : false,
+                                'async' => isset($script['async']) ? $script['async'] : false
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $scripts;
+    }
+    
+    /**
      * Load global styles (styles that should be loaded on every page)
      */
     public function loadGlobalStyles() {

@@ -86,6 +86,17 @@ $pageContent = ob_get_clean();
         $async = $script['async'] ? ' async' : '';
         echo '<script src="' . htmlspecialchars($script['url']) . '"' . $defer . $async . '></script>' . "\n    ";
     }
+    
+    // Load page-specific addon scripts
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : '';
+    if (!empty($currentPage)) {
+        $pageScripts = $addonLoader->loadPageScripts($currentPage);
+        foreach ($pageScripts as $script) {
+            $defer = $script['defer'] ? ' defer' : '';
+            $async = $script['async'] ? ' async' : '';
+            echo '<script src="' . htmlspecialchars($script['url']) . '"' . $defer . $async . '></script>' . "\n    ";
+        }
+    }
     ?>
 </body>
 </html>

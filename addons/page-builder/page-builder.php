@@ -245,5 +245,3 @@ if (is_dir($pagesDir)) {
         </div>
     </div>
 </div>
-
-<script src="/addons/page-builder/page-builder.js"></script>

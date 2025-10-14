@@ -61,5 +61,3 @@ set_page_meta([
 // Make API endpoint available to JavaScript
 window.THEME_EDITOR_API = '/addons/theme-editor/theme-editor-api.php';
 </script>
-
-<script src="/addons/theme-editor/theme-editor.js"></script>
