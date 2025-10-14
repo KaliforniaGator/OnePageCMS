@@ -63,14 +63,17 @@ $fullTitle = $pageTitle ? "$defaultTitle | $pageTitle" : $defaultTitle;
     <link rel="stylesheet" href="/framework/framework-styles/layout.css">
     <link rel="stylesheet" href="/framework/framework-styles/blocks.css">
     
-    <!-- Theme Styles (User Editable) -->
-    <link rel="stylesheet" href="/styles/theme.css">
-    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <!-- User Styles -->
-    <link rel="stylesheet" href="/styles/main.css">
+    <?php
+    // Load all user styles dynamically
+    $userStyles = get_user_styles();
+    foreach ($userStyles as $styleUrl) {
+        echo '<link rel="stylesheet" href="' . htmlspecialchars($styleUrl) . '">' . "\n    ";
+    }
+    ?>
     
     <?php
     // Load addon styles

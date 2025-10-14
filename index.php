@@ -25,6 +25,9 @@ require_once __DIR__ . '/framework/framework-includes/blocks.php';
 // Load addon system
 require_once __DIR__ . '/framework/framework-includes/addon-loader.php';
 
+// Load user assets helper
+require_once __DIR__ . '/framework/framework-includes/user-assets.php';
+
 // Load global addon configs (functions, hooks, etc.) - works for all addons
 $GLOBALS['addonLoader']->loadGlobalConfigs();
 
@@ -66,7 +69,13 @@ $pageContent = ob_get_clean();
     <script src="/framework/framework-scripts/blocks.js"></script>
     
     <!-- User Scripts -->
-    <script src="/scripts/main.js"></script>
+    <?php
+    // Load all user scripts dynamically
+    $userScripts = get_user_scripts();
+    foreach ($userScripts as $scriptUrl) {
+        echo '<script src="' . htmlspecialchars($scriptUrl) . '"></script>' . "\n    ";
+    }
+    ?>
     
     <?php
     // Load global addon scripts
