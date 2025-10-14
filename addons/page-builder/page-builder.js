@@ -1244,8 +1244,15 @@
             form.appendChild(formGroup);
         });
 
-        // Show modal
-        document.getElementById('pb-editor-modal').classList.add('active');
+        // Show properties sidebar
+        const sidebar = document.getElementById('pb-properties-sidebar');
+        sidebar.classList.add('active');
+        
+        // Remove empty state if present
+        const emptyState = sidebar.querySelector('.pb-properties-empty');
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
         
         // Initial preview render
         setTimeout(function() {
@@ -1330,10 +1337,21 @@
         // Update visual preview
         updateBlockPreview(currentEditingBlock, blockData);
 
-        closeEditorModal();
+        // Don't close sidebar - keep it open for further editing
+        // User can close manually if desired
         
         // Auto-save after editing
         autoSavePage();
+        
+        // Show feedback
+        const saveBtn = document.getElementById('pb-save-block');
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+        saveBtn.style.background = '#27ae60';
+        setTimeout(function() {
+            saveBtn.innerHTML = originalText;
+            saveBtn.style.background = '';
+        }, 1500);
     }
     
     // Auto-save function
@@ -1698,16 +1716,15 @@
 
     // Modal Controls
     function setupModals() {
-        // Editor modal
-        const closeEditorBtn = document.getElementById('pb-close-editor');
+        // Properties sidebar
+        const closePropertiesBtn = document.getElementById('pb-close-properties');
         const saveBlockBtn = document.getElementById('pb-save-block');
-        const cancelBlockBtn = document.getElementById('pb-cancel-block');
         
-        if (closeEditorBtn) {
-            closeEditorBtn.addEventListener('click', closeEditorModal);
-            console.log('Close editor button connected');
+        if (closePropertiesBtn) {
+            closePropertiesBtn.addEventListener('click', closePropertiesSidebar);
+            console.log('Close properties button connected');
         } else {
-            console.error('pb-close-editor button not found!');
+            console.error('pb-close-properties button not found!');
         }
         
         if (saveBlockBtn) {
@@ -1718,13 +1735,6 @@
             console.log('Save block button connected');
         } else {
             console.error('pb-save-block button not found!');
-        }
-        
-        if (cancelBlockBtn) {
-            cancelBlockBtn.addEventListener('click', closeEditorModal);
-            console.log('Cancel block button connected');
-        } else {
-            console.error('pb-cancel-block button not found!');
         }
 
         // Preview modal
@@ -1761,8 +1771,14 @@
         });
     }
 
-    function closeEditorModal() {
-        document.getElementById('pb-editor-modal').classList.remove('active');
+    function closePropertiesSidebar() {
+        const sidebar = document.getElementById('pb-properties-sidebar');
+        sidebar.classList.remove('active');
+        
+        // Clear form and show empty state
+        const form = document.getElementById('pb-editor-form');
+        form.innerHTML = '<div class="pb-properties-empty"><i class="fas fa-mouse-pointer"></i><p>Select a block to edit its properties</p></div>';
+        
         currentEditingBlock = null;
     }
 

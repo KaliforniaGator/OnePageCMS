@@ -250,6 +250,11 @@
     overflow: hidden;
     min-width: 0;
     height: 100%;
+    transition: margin-right 0.3s ease;
+}
+
+.pb-canvas-wrapper.properties-open {
+    margin-right: 0;
 }
 
 .pb-canvas-header {
@@ -563,7 +568,102 @@
     margin-top: 0.5rem;
 }
 
-/* Editor Form */
+/* Properties Sidebar */
+.pb-properties-sidebar {
+    width: 0;
+    background: white;
+    border-left: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+    height: 100%;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.pb-properties-sidebar.active {
+    width: 380px;
+}
+
+.pb-properties-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pb-properties-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.pb-properties-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #95a5a6;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.pb-properties-close:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+.pb-properties-form {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.pb-properties-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #95a5a6;
+    text-align: center;
+    padding: 2rem;
+}
+
+.pb-properties-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.pb-properties-empty p {
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.pb-properties-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #eee;
+    background: #f8f9fa;
+    flex-shrink: 0;
+}
+
+.pb-btn-block {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Editor Form (legacy class for compatibility) */
 .pb-editor-form {
     padding: 1.5rem;
     overflow-y: auto;
@@ -699,20 +799,23 @@
 /* Scrollbar Styling */
 .pb-blocks-list::-webkit-scrollbar,
 .pb-canvas::-webkit-scrollbar,
-.pb-editor-form::-webkit-scrollbar {
+.pb-editor-form::-webkit-scrollbar,
+.pb-properties-form::-webkit-scrollbar {
     width: 10px;
 }
 
 .pb-blocks-list::-webkit-scrollbar-track,
 .pb-canvas::-webkit-scrollbar-track,
-.pb-editor-form::-webkit-scrollbar-track {
+.pb-editor-form::-webkit-scrollbar-track,
+.pb-properties-form::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 5px;
 }
 
 .pb-blocks-list::-webkit-scrollbar-thumb,
 .pb-canvas::-webkit-scrollbar-thumb,
-.pb-editor-form::-webkit-scrollbar-thumb {
+.pb-editor-form::-webkit-scrollbar-thumb,
+.pb-properties-form::-webkit-scrollbar-thumb {
     background: #95a5a6;
     border-radius: 5px;
     border: 2px solid #f1f1f1;
@@ -720,14 +823,16 @@
 
 .pb-blocks-list::-webkit-scrollbar-thumb:hover,
 .pb-canvas::-webkit-scrollbar-thumb:hover,
-.pb-editor-form::-webkit-scrollbar-thumb:hover {
+.pb-editor-form::-webkit-scrollbar-thumb:hover,
+.pb-properties-form::-webkit-scrollbar-thumb:hover {
     background: #7f8c8d;
 }
 
 /* Smooth scrolling */
 .pb-blocks-list,
 .pb-canvas,
-.pb-editor-form {
+.pb-editor-form,
+.pb-properties-form {
     scroll-behavior: smooth;
 }
 
@@ -875,6 +980,17 @@
     
     .pb-block-item {
         margin-bottom: 0;
+    }
+    
+    .pb-properties-sidebar.active {
+        position: fixed;
+        top: 60px;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 100%;
+        z-index: 1500;
+        box-shadow: -2px 0 8px rgba(0,0,0,0.2);
     }
 }
 

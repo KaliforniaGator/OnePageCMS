@@ -136,7 +136,7 @@ if (is_dir($pagesDir)) {
             </div>
         </div>
 
-        <!-- Right Canvas - Page Preview -->
+        <!-- Center Canvas - Page Preview -->
         <div class="pb-canvas-wrapper">
             <div class="pb-canvas-header">
                 <h2>Page Canvas</h2>
@@ -149,6 +149,27 @@ if (is_dir($pagesDir)) {
                     <i class="fas fa-mouse-pointer"></i>
                     <p>Drag blocks here to start building your page</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar - Properties Panel -->
+        <div class="pb-properties-sidebar" id="pb-properties-sidebar">
+            <div class="pb-properties-header">
+                <h2>Properties</h2>
+                <button id="pb-close-properties" class="pb-properties-close" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="pb-editor-form" class="pb-properties-form">
+                <div class="pb-properties-empty">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <p>Select a block to edit its properties</p>
+                </div>
+            </div>
+            <div class="pb-properties-footer">
+                <button id="pb-save-block" class="pb-btn pb-btn-success pb-btn-block">
+                    <i class="fas fa-check"></i> Apply Changes
+                </button>
             </div>
         </div>
     </div>
@@ -175,29 +196,6 @@ if (is_dir($pagesDir)) {
             </div>
             <div class="pb-preview-frame-wrapper">
                 <iframe id="pb-preview-frame" class="pb-preview-frame desktop"></iframe>
-            </div>
-        </div>
-    </div>
-
-    <!-- Block Editor Modal -->
-    <div id="pb-editor-modal" class="pb-modal">
-        <div class="pb-modal-content pb-editor-modal-content">
-            <div class="pb-modal-header">
-                <h2>Edit Block</h2>
-                <button id="pb-close-editor" class="pb-modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div id="pb-editor-form" class="pb-editor-form">
-                <!-- Dynamic form will be inserted here -->
-            </div>
-            <div class="pb-modal-footer">
-                <button id="pb-save-block" class="pb-btn pb-btn-success">
-                    <i class="fas fa-check"></i> Save Block
-                </button>
-                <button id="pb-cancel-block" class="pb-btn pb-btn-secondary">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
             </div>
         </div>
     </div>
