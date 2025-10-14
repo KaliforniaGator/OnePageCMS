@@ -4,38 +4,40 @@
  * Drag-and-drop interface for building pages
  */
 
-// Get available blocks
-$availableBlocks = [
-    'container' => ['name' => 'Container', 'icon' => '📦'],
-    'textview' => ['name' => 'Text View', 'icon' => '📝'],
-    'button' => ['name' => 'Button', 'icon' => '🔘'],
-    'buttongroup' => ['name' => 'Button Group', 'icon' => '🔲'],
-    'card' => ['name' => 'Card', 'icon' => '🃏'],
-    'accordion' => ['name' => 'Accordion', 'icon' => '📋'],
-    'alert' => ['name' => 'Alert', 'icon' => '⚠️'],
-    'form' => ['name' => 'Form', 'icon' => '📄'],
-    'hero' => ['name' => 'Hero', 'icon' => '🎯'],
-    'slider' => ['name' => 'Slider', 'icon' => '🎠'],
-    'menu' => ['name' => 'Menu', 'icon' => '🍔'],
-    'list' => ['name' => 'List', 'icon' => '📃'],
-    'media' => ['name' => 'Media', 'icon' => '🖼️'],
-    'social' => ['name' => 'Social', 'icon' => '👥'],
-    'logo' => ['name' => 'Logo', 'icon' => '🏷️'],
-    'markdown' => ['name' => 'Markdown', 'icon' => '📖'],
-    // Form Field Blocks
-    'checkbox' => ['name' => 'Checkbox', 'icon' => '☑️'],
-    'inputfield' => ['name' => 'Input Field', 'icon' => '📝'],
-    'radiobuttons' => ['name' => 'Radio Buttons', 'icon' => '🔘'],
-    'datepicker' => ['name' => 'Date Picker', 'icon' => '📅'],
-    'timepicker' => ['name' => 'Time Picker', 'icon' => '🕐'],
-    'datetimepicker' => ['name' => 'Date Time Picker', 'icon' => '📆'],
-    'fileupload' => ['name' => 'File Upload', 'icon' => '📎'],
-    'passwordfield' => ['name' => 'Password Field', 'icon' => '🔒'],
-    'selectfield' => ['name' => 'Select Field', 'icon' => '📋'],
-    'textareafield' => ['name' => 'Text Area', 'icon' => '📄'],
-    'togglefield' => ['name' => 'Toggle', 'icon' => '🔄'],
-    'clearbutton' => ['name' => 'Clear Button', 'icon' => '🗑️'],
-    'submitbutton' => ['name' => 'Submit Button', 'icon' => '✅']
+// Get available blocks organized by category
+$normalBlocks = [
+    'container' => ['name' => 'Container', 'icon' => 'fas fa-box'],
+    'textview' => ['name' => 'Text View', 'icon' => 'fas fa-align-left'],
+    'button' => ['name' => 'Button', 'icon' => 'fas fa-hand-pointer'],
+    'buttongroup' => ['name' => 'Button Group', 'icon' => 'fas fa-th-large'],
+    'card' => ['name' => 'Card', 'icon' => 'fas fa-id-card'],
+    'accordion' => ['name' => 'Accordion', 'icon' => 'fas fa-bars'],
+    'alert' => ['name' => 'Alert', 'icon' => 'fas fa-exclamation-triangle'],
+    'form' => ['name' => 'Form', 'icon' => 'fas fa-file-alt'],
+    'hero' => ['name' => 'Hero', 'icon' => 'fas fa-star'],
+    'slider' => ['name' => 'Slider', 'icon' => 'fas fa-images'],
+    'menu' => ['name' => 'Menu', 'icon' => 'fas fa-bars'],
+    'list' => ['name' => 'List', 'icon' => 'fas fa-list'],
+    'media' => ['name' => 'Media', 'icon' => 'fas fa-image'],
+    'social' => ['name' => 'Social', 'icon' => 'fas fa-share-alt'],
+    'logo' => ['name' => 'Logo', 'icon' => 'fas fa-tag'],
+    'markdown' => ['name' => 'Markdown', 'icon' => 'fab fa-markdown']
+];
+
+$formBlocks = [
+    'checkbox' => ['name' => 'Checkbox', 'icon' => 'fas fa-check-square'],
+    'inputfield' => ['name' => 'Input Field', 'icon' => 'fas fa-keyboard'],
+    'radiobuttons' => ['name' => 'Radio Buttons', 'icon' => 'fas fa-dot-circle'],
+    'datepicker' => ['name' => 'Date Picker', 'icon' => 'fas fa-calendar-alt'],
+    'timepicker' => ['name' => 'Time Picker', 'icon' => 'fas fa-clock'],
+    'datetimepicker' => ['name' => 'Date Time Picker', 'icon' => 'fas fa-calendar-check'],
+    'fileupload' => ['name' => 'File Upload', 'icon' => 'fas fa-file-upload'],
+    'passwordfield' => ['name' => 'Password Field', 'icon' => 'fas fa-lock'],
+    'selectfield' => ['name' => 'Select Field', 'icon' => 'fas fa-caret-square-down'],
+    'textareafield' => ['name' => 'Text Area', 'icon' => 'fas fa-paragraph'],
+    'togglefield' => ['name' => 'Toggle', 'icon' => 'fas fa-toggle-on'],
+    'clearbutton' => ['name' => 'Clear Button', 'icon' => 'fas fa-eraser'],
+    'submitbutton' => ['name' => 'Submit Button', 'icon' => 'fas fa-paper-plane']
 ];
 
 // Get existing pages
@@ -104,12 +106,33 @@ if (is_dir($pagesDir)) {
                 <p>Drag blocks to the canvas</p>
             </div>
             <div class="pb-blocks-list">
-                <?php foreach ($availableBlocks as $blockType => $blockInfo): ?>
-                    <div class="pb-block-item" draggable="true" data-block-type="<?php echo $blockType; ?>">
-                        <span class="pb-block-icon"><?php echo $blockInfo['icon']; ?></span>
-                        <span class="pb-block-name"><?php echo $blockInfo['name']; ?></span>
+                <!-- Normal Blocks Section -->
+                <div class="pb-blocks-section">
+                    <div class="pb-section-header">
+                        <i class="fas fa-cube"></i>
+                        <span>Content Blocks</span>
                     </div>
-                <?php endforeach; ?>
+                    <?php foreach ($normalBlocks as $blockType => $blockInfo): ?>
+                        <div class="pb-block-item" draggable="true" data-block-type="<?php echo $blockType; ?>">
+                            <i class="pb-block-icon <?php echo $blockInfo['icon']; ?>"></i>
+                            <span class="pb-block-name"><?php echo $blockInfo['name']; ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Form Blocks Section -->
+                <div class="pb-blocks-section">
+                    <div class="pb-section-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Form Elements</span>
+                    </div>
+                    <?php foreach ($formBlocks as $blockType => $blockInfo): ?>
+                        <div class="pb-block-item" draggable="true" data-block-type="<?php echo $blockType; ?>">
+                            <i class="pb-block-icon <?php echo $blockInfo['icon']; ?>"></i>
+                            <span class="pb-block-name"><?php echo $blockInfo['name']; ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
 
