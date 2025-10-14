@@ -41,10 +41,11 @@ function block_social_buttons($links, $style = 'icon', $size = 'medium', $shape 
     ];
     
     foreach ($links as $link) {
-        $platform = strtolower($link['platform'] ?? '');
+        // Use the icon field directly if provided, otherwise fall back to platform mapping
+        $platform = strtolower($link['platform'] ?? $link['name'] ?? '');
         $url = $link['url'] ?? '#';
-        $iconClass = $icons[$platform] ?? 'fas fa-link';
-        $label = ucfirst($platform);
+        $iconClass = $link['icon'] ?? ($icons[$platform] ?? 'fas fa-link');
+        $label = $link['name'] ?? ucfirst($platform);
         
         $html .= "<a href=\"$url\" class=\"social-link social-$platform\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"$label\">";
         
