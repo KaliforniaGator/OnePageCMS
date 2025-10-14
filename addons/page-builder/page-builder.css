@@ -325,13 +325,34 @@
     padding: 1.5rem;
     border: 2px dashed transparent;
     border-radius: 4px;
-    transition: all 0.2s;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     background: #f8f9fa;
 }
 
 .pb-canvas-block:hover {
     border-color: #3498db;
     background: #e3f2fd;
+}
+
+/* Dragging state */
+.pb-canvas-block.dragging {
+    opacity: 0.5;
+    cursor: grabbing !important;
+    transform: scale(0.98);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Drag over indicators */
+.pb-canvas-block.drag-over-top {
+    border-top: 3px solid #2ecc71;
+    padding-top: calc(1.5rem + 3px);
+    margin-top: -3px;
+}
+
+.pb-canvas-block.drag-over-bottom {
+    border-bottom: 3px solid #2ecc71;
+    padding-bottom: calc(1.5rem + 3px);
+    margin-bottom: calc(1rem - 3px);
 }
 
 .pb-canvas-block.pb-container-block {
@@ -394,10 +415,17 @@
     background: #95a5a6;
     color: white;
     cursor: grab;
+    user-select: none;
+}
+
+.pb-block-control-btn.move:hover {
+    background: #7f8c8d;
+    transform: scale(1.15);
 }
 
 .pb-block-control-btn.move:active {
     cursor: grabbing;
+    background: #6c7a7b;
 }
 
 /* Block Label */
@@ -424,6 +452,12 @@
 .pb-canvas-block.drag-over {
     border-color: #2ecc71;
     background: #d4edda;
+}
+
+/* Smooth transitions for drag indicators */
+.pb-canvas-block.drag-over-top,
+.pb-canvas-block.drag-over-bottom {
+    transition: border 0.15s ease, padding 0.15s ease, margin 0.15s ease;
 }
 
 /* Modal */
@@ -923,6 +957,22 @@
 .pb-container-children {
     min-height: 60px;
     padding: 0.5rem;
+}
+
+/* Blocks within containers have slightly different styling */
+.pb-container-children > .pb-canvas-block {
+    background: #ffffff;
+    border: 2px dashed #dee2e6;
+    margin-bottom: 0.75rem;
+}
+
+.pb-container-children > .pb-canvas-block:hover {
+    border-color: #6c757d;
+    background: #f8f9fa;
+}
+
+.pb-container-children > .pb-canvas-block:last-child {
+    margin-bottom: 0;
 }
 
 /* Responsive Design */

@@ -230,7 +230,7 @@
         // Form Field Blocks
         checkbox: {
             name: 'Checkbox',
-            defaultContent: '<input type="checkbox">',
+            defaultContent: '<label><input type="checkbox"> Checkbox Label</label>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'checkbox' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Checkbox Label' },
@@ -242,7 +242,7 @@
         },
         inputfield: {
             name: 'Input Field',
-            defaultContent: '<input type="text">',
+            defaultContent: '<div class="form-group"><label>Input Label</label><input type="text" placeholder=""></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'input' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Input Label' },
@@ -255,7 +255,7 @@
         },
         radiobuttons: {
             name: 'Radio Buttons',
-            defaultContent: '<input type="radio">',
+            defaultContent: '<div class="form-group"><label>Radio Group Label</label><label><input type="radio"> Option 1</label><label><input type="radio"> Option 2</label></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'radio' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Radio Group Label' },
@@ -266,7 +266,7 @@
         },
         datepicker: {
             name: 'Date Picker',
-            defaultContent: '<input type="date">',
+            defaultContent: '<div class="form-group"><label>Date</label><input type="date"></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'date' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Date' },
@@ -276,7 +276,7 @@
         },
         timepicker: {
             name: 'Time Picker',
-            defaultContent: '<input type="time">',
+            defaultContent: '<div class="form-group"><label>Time</label><input type="time"></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'time' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Time' },
@@ -286,7 +286,7 @@
         },
         datetimepicker: {
             name: 'Date Time Picker',
-            defaultContent: '<input type="datetime-local">',
+            defaultContent: '<div class="form-group"><label>Date & Time</label><input type="datetime-local"></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'datetime' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Date & Time' },
@@ -296,7 +296,7 @@
         },
         fileupload: {
             name: 'File Upload',
-            defaultContent: '<input type="file">',
+            defaultContent: '<div class="form-group"><label>Upload File</label><input type="file"></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'file' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Upload File' },
@@ -308,7 +308,7 @@
         },
         passwordfield: {
             name: 'Password Field',
-            defaultContent: '<input type="password">',
+            defaultContent: '<div class="form-group"><label>Password</label><input type="password"></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'password' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Password' },
@@ -319,7 +319,7 @@
         },
         selectfield: {
             name: 'Select Field',
-            defaultContent: '<select></select>',
+            defaultContent: '<div class="form-group"><label>Select Option</label><select><option>Option 1</option><option>Option 2</option></select></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'select' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Select Option' },
@@ -330,7 +330,7 @@
         },
         textareafield: {
             name: 'Text Area',
-            defaultContent: '<textarea></textarea>',
+            defaultContent: '<div class="form-group"><label>Text Area Label</label><textarea rows="4"></textarea></div>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'textarea' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Text Area Label' },
@@ -342,7 +342,7 @@
         },
         togglefield: {
             name: 'Toggle',
-            defaultContent: '<input type="checkbox" class="toggle">',
+            defaultContent: '<label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span><span class="toggle-label">Toggle Label</span></label>',
             fields: [
                 { name: 'name', label: 'Name', type: 'text', default: 'toggle' },
                 { name: 'label', label: 'Label', type: 'text', default: 'Toggle Label' },
@@ -352,7 +352,7 @@
         },
         clearbutton: {
             name: 'Clear Button',
-            defaultContent: '<button type="reset">Clear</button>',
+            defaultContent: '<button type="reset" class="btn btn-secondary">Clear</button>',
             fields: [
                 { name: 'text', label: 'Button Text', type: 'text', default: 'Clear' },
                 { name: 'style', label: 'Style', type: 'select', options: ['primary', 'secondary', 'danger', 'outline'], default: 'secondary' },
@@ -361,7 +361,7 @@
         },
         submitbutton: {
             name: 'Submit Button',
-            defaultContent: '<button type="submit">Submit</button>',
+            defaultContent: '<button type="submit" class="btn btn-primary">Submit</button>',
             fields: [
                 { name: 'text', label: 'Button Text', type: 'text', default: 'Submit' },
                 { name: 'style', label: 'Style', type: 'select', options: ['primary', 'secondary', 'success', 'danger', 'outline'], default: 'primary' },
@@ -622,20 +622,14 @@
         }
     }
 
-    // Add Block to Canvas
-    function addBlockToCanvas(blockType, blockData = null, children = null, isLoading = false) {
-        console.log('Adding block to canvas:', blockType, 'isLoading:', isLoading);
-        removePlaceholder();
-        
-        const canvas = document.getElementById('pb-canvas');
+    // Create a block element (unified function for canvas and container children)
+    function createBlock(blockType, blockData = null, parentContainer = null) {
         const template = blockTemplates[blockType];
         
         if (!template) {
             console.error('Unknown block type:', blockType);
-            return;
+            return null;
         }
-        
-        console.log('Block template found:', template.name);
 
         const blockId = 'block-' + (++blockCounter);
         const blockElement = document.createElement('div');
@@ -681,23 +675,10 @@
                 ${contentHTML}
             </div>
         `;
-
-        canvas.appendChild(blockElement);
         
         // If container, make it accept drops
         if (template.acceptsChildren) {
             setupContainerDropZone(blockElement);
-            
-            // Load children if provided
-            if (children && children.length > 0) {
-                console.log('Loading', children.length, 'children into container');
-                const childrenContainer = blockElement.querySelector('.pb-container-children');
-                children.forEach(child => {
-                    console.log('Loading child:', child.type, child.data);
-                    const childBlock = createChildBlockFromData(child.type, child.data);
-                    childrenContainer.appendChild(childBlock);
-                });
-            }
         } else {
             // Render initial preview for non-container blocks
             var initialData = blockData || {};
@@ -709,8 +690,38 @@
             updateBlockPreview(blockElement, initialData);
         }
         
-        // Make block sortable
-        makeBlockSortable(blockElement);
+        // Make block sortable (works for both canvas and container children)
+        makeBlockSortable(blockElement, parentContainer);
+        
+        return blockElement;
+    }
+
+    // Add Block to Canvas
+    function addBlockToCanvas(blockType, blockData = null, children = null, isLoading = false) {
+        console.log('Adding block to canvas:', blockType, 'isLoading:', isLoading);
+        removePlaceholder();
+        
+        const canvas = document.getElementById('pb-canvas');
+        const blockElement = createBlock(blockType, blockData, null);
+        
+        if (!blockElement) return;
+        
+        canvas.appendChild(blockElement);
+        
+        // Load children if provided
+        if (children && children.length > 0) {
+            console.log('Loading', children.length, 'children into container');
+            const childrenContainer = blockElement.querySelector('.pb-container-children');
+            if (childrenContainer) {
+                children.forEach(child => {
+                    console.log('Loading child:', child.type, child.data);
+                    const childBlock = createBlock(child.type, child.data, childrenContainer);
+                    if (childBlock) {
+                        childrenContainer.appendChild(childBlock);
+                    }
+                });
+            }
+        }
         
         // Auto-save after adding block (but not when loading from file)
         if (!isLoading) {
@@ -725,12 +736,22 @@
         dropZone.addEventListener('dragover', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            containerBlock.classList.add('drag-over');
+            
+            // Only show drag-over if we're dragging a block
+            if (window.draggedBlock || e.dataTransfer.types.includes('blocktype')) {
+                containerBlock.classList.add('drag-over');
+            }
         });
         
         dropZone.addEventListener('dragleave', function(e) {
             e.stopPropagation();
-            containerBlock.classList.remove('drag-over');
+            
+            // Check if we're leaving the drop zone entirely
+            const rect = dropZone.getBoundingClientRect();
+            if (e.clientX < rect.left || e.clientX >= rect.right ||
+                e.clientY < rect.top || e.clientY >= rect.bottom) {
+                containerBlock.classList.remove('drag-over');
+            }
         });
         
         dropZone.addEventListener('drop', function(e) {
@@ -738,130 +759,171 @@
             e.stopPropagation();
             containerBlock.classList.remove('drag-over');
             
+            // Check if we're moving an existing block
+            if (window.draggedBlock) {
+                // Move the block to this container
+                dropZone.appendChild(window.draggedBlock);
+                autoSavePage();
+                return;
+            }
+            
+            // Otherwise, create a new block from sidebar
             const blockType = e.dataTransfer.getData('blockType');
             if (blockType) {
-                // Create child block
-                const childBlock = createChildBlock(blockType);
-                dropZone.appendChild(childBlock);
-                
-                // Auto-save after adding child block
-                autoSavePage();
+                // Create block and add to container
+                const childBlock = createBlock(blockType, null, dropZone);
+                if (childBlock) {
+                    dropZone.appendChild(childBlock);
+                    autoSavePage();
+                }
             }
         });
     }
     
-    // Create Child Block (simplified version for containers)
-    function createChildBlock(blockType) {
-        const template = blockTemplates[blockType];
-        const blockId = 'block-' + (++blockCounter);
-        
-        const blockElement = document.createElement('div');
-        blockElement.className = 'pb-canvas-block pb-child-block';
-        blockElement.dataset.blockId = blockId;
-        blockElement.dataset.blockType = blockType;
-        
-        const defaultData = {};
-        template.fields.forEach(field => {
-            defaultData[field.name] = field.default;
-        });
-        blockElement.dataset.blockData = JSON.stringify(defaultData);
-        
-        blockElement.innerHTML = `
-            <div class="pb-block-label">${template.name}</div>
-            <div class="pb-block-controls">
-                <button class="pb-block-control-btn edit" title="Edit" onclick="pageBuilder.editBlock('${blockId}')">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="pb-block-control-btn delete" title="Delete" onclick="pageBuilder.deleteBlock('${blockId}')">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <div class="pb-block-content">
-                ${template.defaultContent}
-            </div>
-        `;
-        
-        return blockElement;
-    }
-    
-    // Create Child Block From Data (for loading saved pages)
-    function createChildBlockFromData(blockType, blockData) {
-        const template = blockTemplates[blockType];
-        const blockId = 'block-' + (++blockCounter);
-        
-        const blockElement = document.createElement('div');
-        blockElement.className = 'pb-canvas-block pb-child-block';
-        blockElement.dataset.blockId = blockId;
-        blockElement.dataset.blockType = blockType;
-        blockElement.dataset.blockData = JSON.stringify(blockData);
-        
-        blockElement.innerHTML = `
-            <div class="pb-block-label">${template.name}</div>
-            <div class="pb-block-controls">
-                <button class="pb-block-control-btn edit" title="Edit" onclick="pageBuilder.editBlock('${blockId}')">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="pb-block-control-btn delete" title="Delete" onclick="pageBuilder.deleteBlock('${blockId}')">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <div class="pb-block-content">
-                <pre style="font-size: 0.85rem; color: #666;">${JSON.stringify(blockData, null, 2)}</pre>
-            </div>
-        `;
-        
-        return blockElement;
-    }
 
-    // Make blocks sortable
-    function makeBlockSortable(blockElement) {
+    // Make blocks sortable (works for both canvas and container children)
+    function makeBlockSortable(blockElement, parentContainer = null) {
+        const isInContainer = parentContainer !== null;
         const moveBtn = blockElement.querySelector('.pb-block-control-btn.move');
         if (!moveBtn) return;
         
-        let draggedElement = null;
+        // Make the move button itself draggable
+        moveBtn.setAttribute('draggable', 'true');
         
-        moveBtn.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-            draggedElement = blockElement;
-            blockElement.style.opacity = '0.5';
-            blockElement.style.cursor = 'grabbing';
+        // Handle drag start from move button
+        moveBtn.addEventListener('dragstart', function(e) {
+            e.stopPropagation();
             
-            const canvas = document.getElementById('pb-canvas');
-            const blocks = Array.from(canvas.querySelectorAll('.pb-canvas-block:not(.pb-child-block)'));
+            // Apply dragging styles to the parent block
+            blockElement.classList.add('dragging');
             
-            function onMouseMove(e) {
-                if (!draggedElement) return;
-                
-                // Find which block we're hovering over
-                blocks.forEach(block => {
-                    if (block === draggedElement) return;
-                    
-                    const rect = block.getBoundingClientRect();
-                    const midpoint = rect.top + rect.height / 2;
-                    
-                    if (e.clientY < midpoint) {
-                        canvas.insertBefore(draggedElement, block);
-                    } else if (e.clientY > midpoint) {
-                        canvas.insertBefore(draggedElement, block.nextSibling);
-                    }
-                });
-            }
-
-            function onMouseUp() {
-                if (draggedElement) {
-                    draggedElement.style.opacity = '1';
-                    draggedElement.style.cursor = 'default';
-                    draggedElement = null;
-                    
-                    // Auto-save after rearranging
-                    autoSavePage();
+            // Set up drag data
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', blockElement.innerHTML);
+            
+            // Store reference to dragged element
+            window.draggedBlock = blockElement;
+            
+            // Create a drag image from the entire block
+            const dragImage = blockElement.cloneNode(true);
+            dragImage.style.position = 'absolute';
+            dragImage.style.top = '-9999px';
+            document.body.appendChild(dragImage);
+            e.dataTransfer.setDragImage(dragImage, 0, 0);
+            
+            // Clean up drag image after a short delay
+            setTimeout(() => {
+                if (dragImage.parentNode) {
+                    dragImage.parentNode.removeChild(dragImage);
                 }
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
+            }, 0);
+        });
+        
+        // Handle drag end
+        moveBtn.addEventListener('dragend', function(e) {
+            e.stopPropagation();
+            blockElement.classList.remove('dragging');
+            
+            // Clear all drag-over indicators
+            document.querySelectorAll('.pb-canvas-block').forEach(block => {
+                block.classList.remove('drag-over-top', 'drag-over-bottom');
+            });
+            
+            // Auto-save after rearranging
+            if (window.draggedBlock) {
+                autoSavePage();
+                window.draggedBlock = null;
             }
-
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
+        });
+        
+        // Handle drag over
+        blockElement.addEventListener('dragover', function(e) {
+            if (!window.draggedBlock || window.draggedBlock === blockElement) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+            
+            // Check if this is a container block
+            const isContainer = blockElement.classList.contains('pb-container-block');
+            const dropZone = isContainer ? blockElement.querySelector('.pb-container-children') : null;
+            
+            // If container, check if we're hovering over the container's content area
+            if (isContainer && dropZone) {
+                const dropZoneRect = dropZone.getBoundingClientRect();
+                const isOverDropZone = e.clientY >= dropZoneRect.top && 
+                                      e.clientY <= dropZoneRect.bottom &&
+                                      e.clientX >= dropZoneRect.left && 
+                                      e.clientX <= dropZoneRect.right;
+                
+                // If over the drop zone, let the container handle it
+                if (isOverDropZone) {
+                    blockElement.classList.remove('drag-over-top', 'drag-over-bottom');
+                    return;
+                }
+            }
+            
+            const rect = blockElement.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            
+            // Remove previous indicators
+            blockElement.classList.remove('drag-over-top', 'drag-over-bottom');
+            
+            // Add indicator based on position
+            if (e.clientY < midpoint) {
+                blockElement.classList.add('drag-over-top');
+            } else {
+                blockElement.classList.add('drag-over-bottom');
+            }
+        });
+        
+        // Handle drag leave
+        blockElement.addEventListener('dragleave', function(e) {
+            e.stopPropagation();
+            blockElement.classList.remove('drag-over-top', 'drag-over-bottom');
+        });
+        
+        // Handle drop
+        blockElement.addEventListener('drop', function(e) {
+            if (!window.draggedBlock || window.draggedBlock === blockElement) return;
+            
+            // Check if this is a container block
+            const isContainer = blockElement.classList.contains('pb-container-block');
+            const dropZone = isContainer ? blockElement.querySelector('.pb-container-children') : null;
+            
+            // If container, check if we're hovering over the container's content area
+            if (isContainer && dropZone) {
+                const dropZoneRect = dropZone.getBoundingClientRect();
+                const isOverDropZone = e.clientY >= dropZoneRect.top && 
+                                      e.clientY <= dropZoneRect.bottom &&
+                                      e.clientX >= dropZoneRect.left && 
+                                      e.clientX <= dropZoneRect.right;
+                
+                // If over the drop zone, let the container handle it
+                if (isOverDropZone) {
+                    blockElement.classList.remove('drag-over-top', 'drag-over-bottom');
+                    return;
+                }
+            }
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const rect = blockElement.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            
+            // Determine the parent container (canvas or container children)
+            const targetParent = blockElement.parentElement;
+            
+            // Insert before or after based on drop position
+            if (e.clientY < midpoint) {
+                targetParent.insertBefore(window.draggedBlock, blockElement);
+            } else {
+                targetParent.insertBefore(window.draggedBlock, blockElement.nextSibling);
+            }
+            
+            // Clean up
+            blockElement.classList.remove('drag-over-top', 'drag-over-bottom');
         });
     }
 
@@ -1364,7 +1426,8 @@
         
         console.log('Auto-saving page:', currentPage);
         const canvas = document.getElementById('pb-canvas');
-        const blocks = Array.from(canvas.querySelectorAll('.pb-canvas-block:not(.pb-child-block)'));
+        // Get only direct children of canvas (not nested blocks inside containers)
+        const blocks = Array.from(canvas.querySelectorAll(':scope > .pb-canvas-block'));
         
         console.log('Number of blocks to save:', blocks.length);
         
@@ -1376,10 +1439,11 @@
             
             console.log('Block:', blockObj.type, 'Data:', blockObj.data);
             
-            // If container, get children
+            // If container or form, get children
             const childrenContainer = block.querySelector('.pb-container-children');
             if (childrenContainer) {
-                const children = Array.from(childrenContainer.querySelectorAll('.pb-child-block'));
+                // Get direct children of the container
+                const children = Array.from(childrenContainer.querySelectorAll(':scope > .pb-canvas-block'));
                 blockObj.children = children.map(child => ({
                     type: child.dataset.blockType,
                     data: JSON.parse(child.dataset.blockData || '{}')
@@ -1506,7 +1570,8 @@
         }
 
         const canvas = document.getElementById('pb-canvas');
-        const blocks = Array.from(canvas.querySelectorAll('.pb-canvas-block:not(.pb-child-block)'));
+        // Get only direct children of canvas (not nested blocks inside containers)
+        const blocks = Array.from(canvas.querySelectorAll(':scope > .pb-canvas-block'));
         
         const pageData = blocks.map(block => {
             const blockObj = {
@@ -1517,7 +1582,8 @@
             // If container, get children
             const childrenContainer = block.querySelector('.pb-container-children');
             if (childrenContainer) {
-                const children = Array.from(childrenContainer.querySelectorAll('.pb-child-block'));
+                // Get direct children of the container
+                const children = Array.from(childrenContainer.querySelectorAll(':scope > .pb-canvas-block'));
                 blockObj.children = children.map(child => ({
                     type: child.dataset.blockType,
                     data: JSON.parse(child.dataset.blockData || '{}')

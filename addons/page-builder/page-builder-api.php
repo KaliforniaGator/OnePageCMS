@@ -897,22 +897,151 @@ function generateBlockCode($block) {
             $code .= "    );\n";
             break;
             
-        // Form field blocks - these are typically used inside form containers
+        // Form Field Blocks - work like any other block
         case 'checkbox':
+            $name = isset($data['name']) ? $data['name'] : 'checkbox';
+            $label = isset($data['label']) ? $data['label'] : 'Checkbox Label';
+            $value = isset($data['value']) ? $data['value'] : '1';
+            $checked = isset($data['checked']) && $data['checked'] ? 'true' : 'false';
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_checkbox('{$name}', '" . addslashes($label) . "', '{$value}', {$checked}, {$required}, []);\n";
+            break;
+            
         case 'inputfield':
-        case 'radiobuttons':
-        case 'datepicker':
-        case 'timepicker':
-        case 'datetimepicker':
-        case 'fileupload':
+            $name = isset($data['name']) ? $data['name'] : 'input';
+            $label = isset($data['label']) ? $data['label'] : 'Input Label';
+            $placeholder = isset($data['placeholder']) ? $data['placeholder'] : '';
+            $value = isset($data['value']) ? $data['value'] : '';
+            $inputType = isset($data['input_type']) ? $data['input_type'] : 'text';
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_inputfield('{$name}', '" . addslashes($label) . "', '" . addslashes($placeholder) . "', '" . addslashes($value) . "', '{$inputType}', {$required}, []);\n";
+            break;
+            
         case 'passwordfield':
-        case 'selectfield':
+            $name = isset($data['name']) ? $data['name'] : 'password';
+            $label = isset($data['label']) ? $data['label'] : 'Password';
+            $placeholder = isset($data['placeholder']) ? $data['placeholder'] : '';
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_passwordfield('{$name}', '" . addslashes($label) . "', '" . addslashes($placeholder) . "', {$required}, []);\n";
+            break;
+            
         case 'textareafield':
+            $name = isset($data['name']) ? $data['name'] : 'textarea';
+            $label = isset($data['label']) ? $data['label'] : 'Text Area Label';
+            $placeholder = isset($data['placeholder']) ? $data['placeholder'] : '';
+            $rows = isset($data['rows']) ? intval($data['rows']) : 4;
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_textareafield('{$name}', '" . addslashes($label) . "', '" . addslashes($placeholder) . "', {$rows}, {$required}, []);\n";
+            break;
+            
+        case 'selectfield':
+            $name = isset($data['name']) ? $data['name'] : 'select';
+            $label = isset($data['label']) ? $data['label'] : 'Select Option';
+            $options = isset($data['options']) ? $data['options'] : [];
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    \$options = [\n";
+            foreach ($options as $opt) {
+                $code .= "        ['label' => '" . addslashes($opt['label']) . "', 'value' => '" . addslashes($opt['value']) . "'],\n";
+            }
+            $code .= "    ];\n";
+            $code .= "    echo block_selectfield('{$name}', '" . addslashes($label) . "', \$options, {$required}, []);\n";
+            break;
+            
+        case 'radiobuttons':
+            $name = isset($data['name']) ? $data['name'] : 'radio';
+            $label = isset($data['label']) ? $data['label'] : 'Radio Group Label';
+            $options = isset($data['options']) ? $data['options'] : [];
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    \$options = [\n";
+            foreach ($options as $opt) {
+                $code .= "        ['label' => '" . addslashes($opt['label']) . "', 'value' => '" . addslashes($opt['value']) . "'],\n";
+            }
+            $code .= "    ];\n";
+            $code .= "    echo block_radiobuttons('{$name}', '" . addslashes($label) . "', \$options, {$required}, []);\n";
+            break;
+            
+        case 'datepicker':
+            $name = isset($data['name']) ? $data['name'] : 'date';
+            $label = isset($data['label']) ? $data['label'] : 'Date';
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_datepicker('{$name}', '" . addslashes($label) . "', {$required}, []);\n";
+            break;
+            
+        case 'timepicker':
+            $name = isset($data['name']) ? $data['name'] : 'time';
+            $label = isset($data['label']) ? $data['label'] : 'Time';
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_timepicker('{$name}', '" . addslashes($label) . "', {$required}, []);\n";
+            break;
+            
+        case 'datetimepicker':
+            $name = isset($data['name']) ? $data['name'] : 'datetime';
+            $label = isset($data['label']) ? $data['label'] : 'Date & Time';
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_datetimepicker('{$name}', '" . addslashes($label) . "', {$required}, []);\n";
+            break;
+            
+        case 'fileupload':
+            $name = isset($data['name']) ? $data['name'] : 'file';
+            $label = isset($data['label']) ? $data['label'] : 'Upload File';
+            $accept = isset($data['accept']) ? $data['accept'] : '';
+            $multiple = isset($data['multiple']) && $data['multiple'] ? 'true' : 'false';
+            $required = isset($data['required']) && $data['required'] ? 'true' : 'false';
+            
+            $code .= "    echo block_fileupload('{$name}', '" . addslashes($label) . "', '" . addslashes($accept) . "', {$multiple}, {$required}, []);\n";
+            break;
+            
         case 'togglefield':
-        case 'clearbutton':
+            $name = isset($data['name']) ? $data['name'] : 'toggle';
+            $label = isset($data['label']) ? $data['label'] : 'Toggle Label';
+            $checked = isset($data['checked']) && $data['checked'] ? 'true' : 'false';
+            
+            $code .= "    echo block_togglefield('{$name}', '" . addslashes($label) . "', {$checked}, []);\n";
+            break;
+            
         case 'submitbutton':
-            // These blocks generate their HTML directly
-            $code .= "    echo '" . addslashes(generateChildBlockCode($block)) . "';\n";
+            $text = isset($data['text']) ? $data['text'] : 'Submit';
+            $style = isset($data['style']) ? $data['style'] : 'primary';
+            
+            $code .= "    echo block_submitbutton('" . addslashes($text) . "', '{$style}', []);\n";
+            break;
+            
+        case 'clearbutton':
+            $text = isset($data['text']) ? $data['text'] : 'Clear';
+            $style = isset($data['style']) ? $data['style'] : 'secondary';
+            
+            $code .= "    echo block_clearbutton('" . addslashes($text) . "', '{$style}', []);\n";
+            break;
+            
+        case 'form':
+            $action = isset($data['action']) ? $data['action'] : '#';
+            $method = isset($data['method']) ? $data['method'] : 'POST';
+            $class = isset($data['class']) ? $data['class'] : '';
+            
+            // Start form
+            $code .= "    echo '<form action=\"" . addslashes($action) . "\" method=\"{$method}\" class=\"" . addslashes($class) . "\">';\n";
+            
+            // Generate child blocks recursively (form fields inside the form)
+            if (isset($block['children']) && is_array($block['children'])) {
+                foreach ($block['children'] as $child) {
+                    $childCode = generateBlockCode($child);
+                    $childCode = preg_replace('/^\s*<\?php\s*/m', '', $childCode);
+                    $childCode = preg_replace('/\s*\?>\s*$/m', '', $childCode);
+                    $code .= $childCode;
+                }
+            }
+            
+            // Close form
+            $code .= "    echo '</form>';\n";
             break;
             
         default:

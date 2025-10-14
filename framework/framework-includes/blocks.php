@@ -20,7 +20,21 @@ $blockFiles = [
     'card.php',
     'accordion.php',
     'logo.php',
-    'markdown.php'
+    'markdown.php',
+    // Form field blocks
+    'checkbox.php',
+    'inputfield.php',
+    'passwordfield.php',
+    'textareafield.php',
+    'selectfield.php',
+    'radiobuttons.php',
+    'datepicker.php',
+    'timepicker.php',
+    'datetimepicker.php',
+    'fileupload.php',
+    'togglefield.php',
+    'submitbutton.php',
+    'clearbutton.php'
 ];
 
 foreach ($blockFiles as $file) {
