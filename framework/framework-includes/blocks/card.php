@@ -11,9 +11,25 @@ function block_card($config) {
     $content = $config['content'] ?? '';
     $image = $config['image'] ?? '';
     $footer = $config['footer'] ?? '';
+    $icon = $config['icon'] ?? '';
+    $icon_shape = $config['icon_shape'] ?? 'none';
+    $icon_color = $config['icon_color'] ?? '';
+    $spacing = $config['spacing'] ?? '';
     $class = $config['class'] ?? '';
     
-    $html = "<div class=\"block-card $class\">";
+    // Build spacing style
+    $spacingStyle = $spacing ? " style=\"padding: $spacing;\"" : '';
+    
+    $html = "<div class=\"block-card $class\"$spacingStyle>";
+    
+    // Add icon if provided
+    if ($icon) {
+        $iconShapeClass = $icon_shape !== 'none' ? "icon-shape-$icon_shape" : '';
+        $iconColorStyle = $icon_color ? " style=\"color: $icon_color;\"" : '';
+        $html .= "<div class=\"card-icon $iconShapeClass\"$iconColorStyle>";
+        $html .= "<i class=\"$icon\"></i>";
+        $html .= "</div>";
+    }
     
     if ($image) {
         $html .= "<div class=\"card-image\"><img src=\"$image\" alt=\"$title\"></div>";

@@ -3,29 +3,47 @@
  * Form Block
  * Creates forms with various input types
  * 
- * @param array $config - Form configuration
+ * @param mixed $config - Form configuration (array) or content (string for child blocks)
  *   - action: Form action URL
  *   - method: Form method (GET/POST)
- *   - fields: Array of field configurations
- *   - submit_text: Submit button text
+ *   - fields: Array of field configurations (legacy support)
+ *   - submit_text: Submit button text (legacy support)
+ *   - content: Child blocks content (when used as container)
  */
 
 function block_form($config) {
-    $action = $config['action'] ?? '';
-    $method = $config['method'] ?? 'POST';
-    $fields = $config['fields'] ?? [];
-    $submitText = $config['submit_text'] ?? 'Submit';
-    $class = $config['class'] ?? '';
-    
-    $html = "<form action=\"$action\" method=\"$method\" class=\"block-form $class\">";
-    
-    foreach ($fields as $field) {
-        $html .= block_form_field($field);
+    // Support both legacy array config and new content-based approach
+    if (is_string($config)) {
+        // Simple content string
+        $content = $config;
+        $action = '#';
+        $method = 'POST';
+        $class = '';
+    } else {
+        $action = $config['action'] ?? '#';
+        $method = $config['method'] ?? 'POST';
+        $class = $config['class'] ?? '';
+        
+        // Check if using legacy fields array or new content approach
+        if (isset($config['fields']) && is_array($config['fields'])) {
+            // Legacy mode: render fields from array
+            $content = '';
+            foreach ($config['fields'] as $field) {
+                $content .= block_form_field($field);
+            }
+            
+            $submitText = $config['submit_text'] ?? 'Submit';
+            $content .= "<div class=\"form-group\">";
+            $content .= "<button type=\"submit\" class=\"btn btn-primary\">$submitText</button>";
+            $content .= "</div>";
+        } else {
+            // New mode: use content directly (for child blocks)
+            $content = $config['content'] ?? '';
+        }
     }
     
-    $html .= "<div class=\"form-group\">";
-    $html .= "<button type=\"submit\" class=\"btn btn-primary\">$submitText</button>";
-    $html .= "</div>";
+    $html = "<form action=\"$action\" method=\"$method\" class=\"block-form $class\">";
+    $html .= $content;
     $html .= "</form>";
     
     return $html;

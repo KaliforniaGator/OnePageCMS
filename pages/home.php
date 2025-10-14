@@ -71,6 +71,6 @@ set_page_meta([
     
     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
         <a href="/?page=about" class="btn btn-primary">Learn More</a>
-        <a href="/?page=blocks" class="btn btn-success">View All Blocks</a>
+        <a href="/?page=blocks" class="btn btn-outline" data-no-ajax>View All Blocks</a>
     </div>
 </article>

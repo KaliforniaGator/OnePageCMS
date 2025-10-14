@@ -12,6 +12,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // Load configuration
 require_once __DIR__ . '/../../config.php';
 
+// Suppress PHP errors from being output (they break JSON)
+error_reporting(0);
+ini_set('display_errors', 0);
+
 // Set JSON header
 header('Content-Type: application/json');
 
@@ -193,7 +197,10 @@ function generatePagePHP($pageName, $blocks) {
 function generateChildBlockCode($block) {
     $type = $block['type'];
     $data = $block['data'];
-    $output = '';
+    $blockContent = '';
+    
+    // Build inline styles from common properties
+    $inlineStyles = buildInlineStyles($data);
     
     switch ($type) {
         case 'textview':
@@ -202,13 +209,13 @@ function generateChildBlockCode($block) {
             $level = isset($data['level']) ? intval($data['level']) : 2;
             
             if ($viewType === 'heading') {
-                $output = '<h' . $level . '>' . $content . '</h' . $level . '>';
+                $blockContent = '<h' . $level . '>' . $content . '</h' . $level . '>';
             } elseif ($viewType === 'quote') {
-                $output = '<blockquote>' . $content . '</blockquote>';
+                $blockContent = '<blockquote>' . $content . '</blockquote>';
             } elseif ($viewType === 'code') {
-                $output = '<pre><code>' . $content . '</code></pre>';
+                $blockContent = '<pre><code>' . $content . '</code></pre>';
             } else {
-                $output = '<p>' . $content . '</p>';
+                $blockContent = '<p>' . $content . '</p>';
             }
             break;
             
@@ -216,138 +223,338 @@ function generateChildBlockCode($block) {
             $text = isset($data['text']) ? $data['text'] : 'Click Me';
             $url = isset($data['url']) ? $data['url'] : '#';
             $btnType = isset($data['type']) ? $data['type'] : 'primary';
-            $output = '<a href="' . $url . '" class="btn btn-' . $btnType . '">' . $text . '</a>';
+            $blockContent = '<a href="' . $url . '" class="btn btn-' . $btnType . '">' . $text . '</a>';
             break;
             
         case 'buttongroup':
             $buttons = isset($data['buttons']) ? $data['buttons'] : [['text' => 'Button 1', 'url' => '#', 'type' => 'primary']];
             $alignment = isset($data['alignment']) ? $data['alignment'] : 'left';
-            $output = '<div class="btn-group btn-group-' . $alignment . '">';
+            $blockContent = '<div class="btn-group btn-group-' . $alignment . '">';
             foreach ($buttons as $btn) {
-                $output .= '<a href="' . $btn['url'] . '" class="btn btn-' . $btn['type'] . '">' . $btn['text'] . '</a>';
+                $blockContent .= '<a href="' . $btn['url'] . '" class="btn btn-' . $btn['type'] . '">' . $btn['text'] . '</a>';
             }
-            $output .= '</div>';
+            $blockContent .= '</div>';
             break;
             
         case 'card':
             $title = isset($data['title']) ? $data['title'] : 'Card Title';
             $content = isset($data['content']) ? $data['content'] : 'Card content';
-            $output = '<div class="card"><h3>' . $title . '</h3><p>' . $content . '</p></div>';
+            $blockContent = '<div class="card"><h3>' . $title . '</h3><p>' . $content . '</p></div>';
             break;
             
         case 'alert':
             $message = isset($data['message']) ? $data['message'] : 'Alert message';
             $alertType = isset($data['type']) ? $data['type'] : 'info';
             $title = isset($data['title']) ? $data['title'] : '';
-            $output = '<div class="alert alert-' . $alertType . '">';
+            $blockContent = '<div class="alert alert-' . $alertType . '">';
             if ($title) {
-                $output .= '<strong>' . $title . '</strong> ';
+                $blockContent .= '<strong>' . $title . '</strong> ';
             }
-            $output .= $message . '</div>';
+            $blockContent .= $message . '</div>';
             break;
             
         case 'hero':
             $title = isset($data['title']) ? $data['title'] : 'Hero Title';
             $subtitle = isset($data['subtitle']) ? $data['subtitle'] : '';
-            $output = '<div class="hero"><h1>' . $title . '</h1>';
+            $blockContent = '<div class="hero"><h1>' . $title . '</h1>';
             if ($subtitle) {
-                $output .= '<p>' . $subtitle . '</p>';
+                $blockContent .= '<p>' . $subtitle . '</p>';
             }
-            $output .= '</div>';
+            $blockContent .= '</div>';
             break;
             
         case 'list':
             $items = isset($data['items']) ? $data['items'] : "Item 1\nItem 2\nItem 3";
             $listType = isset($data['type']) ? $data['type'] : 'ul';
             $itemsArray = array_filter(explode("\n", $items));
-            $output = '<' . $listType . '>';
+            $blockContent = '<' . $listType . '>';
             foreach ($itemsArray as $item) {
-                $output .= '<li>' . trim($item) . '</li>';
+                $blockContent .= '<li>' . trim($item) . '</li>';
             }
-            $output .= '</' . $listType . '>';
+            $blockContent .= '</' . $listType . '>';
             break;
             
         case 'accordion':
             $sections = isset($data['sections']) ? $data['sections'] : [['title' => 'Section', 'content' => 'Content']];
-            $output = '<div class="accordion">';
+            $blockContent = '<div class="accordion">';
             foreach ($sections as $section) {
-                $output .= '<div class="accordion-item">';
-                $output .= '<h3>' . $section['title'] . '</h3>';
-                $output .= '<div>' . $section['content'] . '</div>';
-                $output .= '</div>';
+                $blockContent .= '<div class="accordion-item">';
+                $blockContent .= '<h3>' . $section['title'] . '</h3>';
+                $blockContent .= '<div>' . $section['content'] . '</div>';
+                $blockContent .= '</div>';
             }
-            $output .= '</div>';
+            $blockContent .= '</div>';
             break;
             
         case 'form':
             $action = isset($data['action']) ? $data['action'] : '#';
             $method = isset($data['method']) ? $data['method'] : 'POST';
             $submitText = isset($data['submit_text']) ? $data['submit_text'] : 'Submit';
-            $output = '<form action="' . $action . '" method="' . $method . '">';
-            $output .= '<input type="text" name="name" placeholder="Name" required>';
-            $output .= '<button type="submit">' . $submitText . '</button>';
-            $output .= '</form>';
+            $blockContent = '<form action="' . $action . '" method="' . $method . '">';
+            $blockContent .= '<input type="text" name="name" placeholder="Name" required>';
+            $blockContent .= '<button type="submit">' . $submitText . '</button>';
+            $blockContent .= '</form>';
             break;
             
         case 'media':
             $src = isset($data['src']) ? $data['src'] : 'https://placehold.co/600x400';
             $alt = isset($data['alt']) ? $data['alt'] : 'Image';
             $caption = isset($data['caption']) ? $data['caption'] : '';
-            $output = '<figure>';
-            $output .= '<img src="' . $src . '" alt="' . $alt . '">';
+            $class = isset($data['class']) ? $data['class'] : '';
+            $blockContent = '<figure>';
+            $blockContent .= '<img src="' . $src . '" alt="' . $alt . '" class="' . $class . '">';
             if ($caption) {
-                $output .= '<figcaption>' . $caption . '</figcaption>';
+                $blockContent .= '<figcaption>' . $caption . '</figcaption>';
             }
-            $output .= '</figure>';
+            $blockContent .= '</figure>';
             break;
             
         case 'slider':
             $slides = isset($data['slides']) ? $data['slides'] : [['src' => 'https://placehold.co/800x400', 'alt' => 'Slide']];
-            $output = '<div class="slider">';
+            $blockContent = '<div class="slider">';
             foreach ($slides as $slide) {
-                $output .= '<img src="' . $slide['src'] . '" alt="' . $slide['alt'] . '">';
+                $blockContent .= '<img src="' . $slide['src'] . '" alt="' . $slide['alt'] . '">';
             }
-            $output .= '</div>';
+            $blockContent .= '</div>';
             break;
             
         case 'menu':
             $orientation = isset($data['orientation']) ? $data['orientation'] : 'horizontal';
             $style = isset($data['style']) ? $data['style'] : 'simple';
-            $output = '<nav class="menu menu-' . $orientation . ' menu-' . $style . '">';
-            $output .= '<a href="#">Home</a><a href="#">About</a><a href="#">Contact</a>';
-            $output .= '</nav>';
+            $blockContent = '<nav class="menu menu-' . $orientation . ' menu-' . $style . '">';
+            $blockContent .= '<a href="#">Home</a><a href="#">About</a><a href="#">Contact</a>';
+            $blockContent .= '</nav>';
             break;
             
         case 'social':
             $platforms = isset($data['platforms']) ? $data['platforms'] : 'facebook,twitter,instagram';
             $platformArray = explode(',', $platforms);
-            $output = '<div class="social-buttons">';
+            $blockContent = '<div class="social-buttons">';
             foreach ($platformArray as $platform) {
-                $output .= '<a href="#" class="social-' . trim($platform) . '">' . ucfirst(trim($platform)) . '</a>';
+                $blockContent .= '<a href="#" class="social-' . trim($platform) . '">' . ucfirst(trim($platform)) . '</a>';
             }
-            $output .= '</div>';
+            $blockContent .= '</div>';
             break;
             
         case 'logo':
+            $type = isset($data['type']) ? $data['type'] : 'text';
             $text = isset($data['text']) ? $data['text'] : 'LOGO';
-            $src = isset($data['src']) ? $data['src'] : '';
-            if ($src) {
-                $output = '<img src="' . $src . '" alt="' . $text . '" class="logo">';
-            } else {
-                $output = '<div class="logo">' . $text . '</div>';
+            $imageUrl = isset($data['image_url']) ? $data['image_url'] : '';
+            $textFont = isset($data['text_font']) ? $data['text_font'] : '';
+            $textSize = isset($data['text_size']) ? $data['text_size'] : '';
+            $imageSize = isset($data['image_size']) ? $data['image_size'] : '';
+            
+            $blockContent = '<div class="logo">';
+            
+            // Add image if type is 'image' or 'both'
+            if (($type === 'image' || $type === 'both') && $imageUrl) {
+                $imgStyle = $imageSize ? 'style="width: ' . $imageSize . '; height: auto;"' : '';
+                $blockContent .= '<img src="' . $imageUrl . '" alt="' . $text . '" ' . $imgStyle . '>';
             }
+            
+            // Add text if type is 'text' or 'both'
+            if ($type === 'text' || $type === 'both') {
+                $textStyle = '';
+                if ($textFont) $textStyle .= 'font-family: ' . $textFont . '; ';
+                if ($textSize) $textStyle .= 'font-size: ' . $textSize . '; ';
+                $styleAttr = $textStyle ? 'style="' . $textStyle . '"' : '';
+                $blockContent .= '<span ' . $styleAttr . '>' . $text . '</span>';
+            }
+            
+            $blockContent .= '</div>';
             break;
             
         case 'markdown':
             $content = isset($data['content']) ? $data['content'] : '# Heading\n\nParagraph';
-            $output = '<div class="markdown-content">' . nl2br($content) . '</div>';
+            $blockContent = '<div class="markdown-content">' . nl2br($content) . '</div>';
+            break;
+            
+        // Form Field Blocks
+        case 'checkbox':
+            $name = isset($data['name']) ? $data['name'] : 'checkbox';
+            $label = isset($data['label']) ? $data['label'] : 'Checkbox';
+            $value = isset($data['value']) ? $data['value'] : '1';
+            $checked = isset($data['checked']) && $data['checked'] ? ' checked' : '';
+            $blockContent = '<label><input type="checkbox" name="' . $name . '" value="' . $value . '"' . $checked . '> ' . $label . '</label>';
+            break;
+            
+        case 'inputfield':
+            $name = isset($data['name']) ? $data['name'] : 'input';
+            $label = isset($data['label']) ? $data['label'] : '';
+            $placeholder = isset($data['placeholder']) ? $data['placeholder'] : '';
+            $inputType = isset($data['input_type']) ? $data['input_type'] : 'text';
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<input type="' . $inputType . '" name="' . $name . '" placeholder="' . $placeholder . '">';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'passwordfield':
+            $name = isset($data['name']) ? $data['name'] : 'password';
+            $label = isset($data['label']) ? $data['label'] : 'Password';
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<input type="password" name="' . $name . '">';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'textareafield':
+            $name = isset($data['name']) ? $data['name'] : 'textarea';
+            $label = isset($data['label']) ? $data['label'] : '';
+            $rows = isset($data['rows']) ? $data['rows'] : 4;
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<textarea name="' . $name . '" rows="' . $rows . '"></textarea>';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'selectfield':
+            $name = isset($data['name']) ? $data['name'] : 'select';
+            $label = isset($data['label']) ? $data['label'] : '';
+            $options = isset($data['options']) ? $data['options'] : [];
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<select name="' . $name . '">';
+            $blockContent .= '<option value="">-- Select --</option>';
+            foreach ($options as $opt) {
+                $blockContent .= '<option value="' . $opt['value'] . '">' . $opt['label'] . '</option>';
+            }
+            $blockContent .= '</select>';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'radiobuttons':
+            $name = isset($data['name']) ? $data['name'] : 'radio';
+            $label = isset($data['label']) ? $data['label'] : '';
+            $options = isset($data['options']) ? $data['options'] : [];
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            foreach ($options as $opt) {
+                $blockContent .= '<label><input type="radio" name="' . $name . '" value="' . $opt['value'] . '"> ' . $opt['label'] . '</label>';
+            }
+            $blockContent .= '</div>';
+            break;
+            
+        case 'datepicker':
+            $name = isset($data['name']) ? $data['name'] : 'date';
+            $label = isset($data['label']) ? $data['label'] : 'Date';
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<input type="date" name="' . $name . '">';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'timepicker':
+            $name = isset($data['name']) ? $data['name'] : 'time';
+            $label = isset($data['label']) ? $data['label'] : 'Time';
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<input type="time" name="' . $name . '">';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'datetimepicker':
+            $name = isset($data['name']) ? $data['name'] : 'datetime';
+            $label = isset($data['label']) ? $data['label'] : 'Date & Time';
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<input type="datetime-local" name="' . $name . '">';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'fileupload':
+            $name = isset($data['name']) ? $data['name'] : 'file';
+            $label = isset($data['label']) ? $data['label'] : 'Upload File';
+            $blockContent = '<div class="form-group">';
+            if ($label) $blockContent .= '<label>' . $label . '</label>';
+            $blockContent .= '<input type="file" name="' . $name . '">';
+            $blockContent .= '</div>';
+            break;
+            
+        case 'togglefield':
+            $name = isset($data['name']) ? $data['name'] : 'toggle';
+            $label = isset($data['label']) ? $data['label'] : 'Toggle';
+            $checked = isset($data['checked']) && $data['checked'] ? ' checked' : '';
+            $blockContent = '<label class="toggle-switch">';
+            $blockContent .= '<input type="checkbox" name="' . $name . '"' . $checked . '>';
+            $blockContent .= '<span class="toggle-slider"></span>';
+            $blockContent .= '<span class="toggle-label">' . $label . '</span>';
+            $blockContent .= '</label>';
+            break;
+            
+        case 'submitbutton':
+            $text = isset($data['text']) ? $data['text'] : 'Submit';
+            $style = isset($data['style']) ? $data['style'] : 'primary';
+            $blockContent = '<button type="submit" class="btn btn-' . $style . '">' . $text . '</button>';
+            break;
+            
+        case 'clearbutton':
+            $text = isset($data['text']) ? $data['text'] : 'Clear';
+            $style = isset($data['style']) ? $data['style'] : 'secondary';
+            $blockContent = '<button type="reset" class="btn btn-' . $style . '">' . $text . '</button>';
             break;
             
         default:
-            $output = '<div class="block-' . $type . '">Block: ' . $type . '</div>';
+            $blockContent .= '<div class="block-' . $type . '">Block: ' . $type . '</div>';
     }
     
-    return $output;
+    // Wrap with inline styles if needed
+    if (!empty($inlineStyles)) {
+        return '<div style="' . $inlineStyles . '">' . $blockContent . '</div>';
+    }
+    
+    return $blockContent;
+}
+
+/**
+ * Build inline style string from block data
+ */
+function buildInlineStyles($data) {
+    $styles = [];
+    
+    // Padding
+    if (isset($data['padding_type'])) {
+        if ($data['padding_type'] === 'all' && !empty($data['padding_all'])) {
+            $styles[] = 'padding: ' . $data['padding_all'];
+        } elseif ($data['padding_type'] === 'individual') {
+            if (!empty($data['padding_top'])) $styles[] = 'padding-top: ' . $data['padding_top'];
+            if (!empty($data['padding_right'])) $styles[] = 'padding-right: ' . $data['padding_right'];
+            if (!empty($data['padding_bottom'])) $styles[] = 'padding-bottom: ' . $data['padding_bottom'];
+            if (!empty($data['padding_left'])) $styles[] = 'padding-left: ' . $data['padding_left'];
+        }
+    }
+    
+    // Margin
+    if (isset($data['margin_type'])) {
+        if ($data['margin_type'] === 'all' && !empty($data['margin_all'])) {
+            $styles[] = 'margin: ' . $data['margin_all'];
+        } elseif ($data['margin_type'] === 'individual') {
+            if (!empty($data['margin_top'])) $styles[] = 'margin-top: ' . $data['margin_top'];
+            if (!empty($data['margin_right'])) $styles[] = 'margin-right: ' . $data['margin_right'];
+            if (!empty($data['margin_bottom'])) $styles[] = 'margin-bottom: ' . $data['margin_bottom'];
+            if (!empty($data['margin_left'])) $styles[] = 'margin-left: ' . $data['margin_left'];
+        }
+    }
+    
+    // Dimensions
+    if (!empty($data['width'])) $styles[] = 'width: ' . $data['width'];
+    if (!empty($data['height'])) $styles[] = 'height: ' . $data['height'];
+    
+    // Min/Max dimensions
+    if (isset($data['use_min_width']) && $data['use_min_width'] && !empty($data['min_width'])) {
+        $styles[] = 'min-width: ' . $data['min_width'];
+    }
+    if (isset($data['use_max_width']) && $data['use_max_width'] && !empty($data['max_width'])) {
+        $styles[] = 'max-width: ' . $data['max_width'];
+    }
+    if (isset($data['use_min_height']) && $data['use_min_height'] && !empty($data['min_height'])) {
+        $styles[] = 'min-height: ' . $data['min_height'];
+    }
+    if (isset($data['use_max_height']) && $data['use_max_height'] && !empty($data['max_height'])) {
+        $styles[] = 'max-height: ' . $data['max_height'];
+    }
+    
+    return !empty($styles) ? implode('; ', $styles) : '';
 }
 
 /**
@@ -357,8 +564,16 @@ function generateBlockCode($block) {
     $type = $block['type'];
     $data = $block['data'];
     
+    // Build inline styles from common properties
+    $inlineStyles = buildInlineStyles($data);
+    
     $code = "    <?php\n";
     $code .= "    // Block: {$type}\n";
+    
+    // If we have inline styles, wrap the block in a styled div
+    if (!empty($inlineStyles)) {
+        $code .= "    echo '<div style=\"" . addslashes($inlineStyles) . "\">';\n";
+    }
     
     switch ($type) {
         case 'container':
@@ -378,25 +593,36 @@ function generateBlockCode($block) {
                 $code .= "    echo block_container(<<<'HTML'\n";
                 $code .= $childrenContent . "\n";
                 $code .= "HTML\n";
-                $code .= "    , '" . addslashes($class) . "', '', '{$width}');\n";
+                $code .= "    , '" . addslashes($class) . "', '" . addslashes($inlineStyles) . "', '{$width}');\n";
             } else {
                 $code .= "    echo block_container(\n";
                 $code .= "        '',\n";
                 $code .= "        '" . addslashes($class) . "',\n";
-                $code .= "        '',\n";
+                $code .= "        '" . addslashes($inlineStyles) . "',\n";
                 $code .= "        '{$width}'\n";
                 $code .= "    );\n";
             }
             break;
             
         case 'textview':
-            $content = isset($data['content']) ? $data['content'] : 'Text content';
-            $viewType = isset($data['type']) ? $data['type'] : 'paragraph';
-            $level = isset($data['level']) ? intval($data['level']) : 2;
+            $content = isset($data['content']) ? $data['content'] : 'Sample text content';
+            $type = isset($data['type']) ? $data['type'] : 'paragraph';
+            $level = isset($data['level']) ? $data['level'] : 2;
+            $fontFamily = isset($data['font_family']) ? $data['font_family'] : '';
+            $fontSize = isset($data['font_size']) ? $data['font_size'] : '';
+            $fontWeight = isset($data['font_weight']) ? $data['font_weight'] : 'normal';
+            $class = isset($data['class']) ? $data['class'] : '';
+            
             $code .= "    echo block_textview(\n";
             $code .= "        '" . addslashes($content) . "',\n";
-            $code .= "        '{$viewType}',\n";
-            $code .= "        ['level' => {$level}]\n";
+            $code .= "        '{$type}',\n";
+            $code .= "        [\n";
+            $code .= "            'level' => {$level},\n";
+            if ($fontFamily) $code .= "            'font_family' => '" . addslashes($fontFamily) . "',\n";
+            if ($fontSize) $code .= "            'font_size' => '" . addslashes($fontSize) . "',\n";
+            if ($fontWeight !== 'normal') $code .= "            'font_weight' => '{$fontWeight}',\n";
+            if ($class) $code .= "            'class' => '" . addslashes($class) . "',\n";
+            $code .= "        ]\n";
             $code .= "    );\n";
             break;
             
@@ -405,47 +631,73 @@ function generateBlockCode($block) {
             $url = isset($data['url']) ? $data['url'] : '#';
             $btnType = isset($data['type']) ? $data['type'] : 'primary';
             $size = isset($data['size']) ? $data['size'] : 'medium';
+            $class = isset($data['class']) ? $data['class'] : '';
             $code .= "    echo block_button(\n";
             $code .= "        '" . addslashes($text) . "',\n";
             $code .= "        '" . addslashes($url) . "',\n";
             $code .= "        '{$btnType}',\n";
-            $code .= "        '{$size}'\n";
+            $code .= "        '{$size}',\n";
+            $code .= "        '" . addslashes($class) . "'\n";
             $code .= "    );\n";
             break;
             
         case 'buttongroup':
             $buttons = isset($data['buttons']) ? $data['buttons'] : [['text' => 'Button 1', 'url' => '#', 'type' => 'primary']];
             $alignment = isset($data['alignment']) ? $data['alignment'] : 'left';
-            $code .= "    ?>\n";
-            $code .= "    <div class=\"btn-group btn-group-{$alignment}\">\n";
+            $class = isset($data['class']) ? $data['class'] : '';
+            
+            $code .= "    echo block_button_group(\n";
+            $code .= "        [\n";
             foreach ($buttons as $btn) {
-                $code .= "        <?php echo block_button('" . addslashes($btn['text']) . "', '" . addslashes($btn['url']) . "', '{$btn['type']}'); ?>\n";
+                $btnText = isset($btn['text']) ? $btn['text'] : 'Button';
+                $btnUrl = isset($btn['url']) ? $btn['url'] : '#';
+                $btnType = isset($btn['type']) ? $btn['type'] : 'primary';
+                $code .= "            ['text' => '" . addslashes($btnText) . "', 'url' => '" . addslashes($btnUrl) . "', 'type' => '{$btnType}'],\n";
             }
-            $code .= "    </div>\n";
-            $code .= "    <?php\n";
+            $code .= "        ],\n";
+            $code .= "        '{$alignment}'\n";
+            $code .= "    );\n";
             break;
             
         case 'card':
             $title = isset($data['title']) ? $data['title'] : 'Card Title';
             $content = isset($data['content']) ? $data['content'] : 'Card content';
             $footer = isset($data['footer']) ? $data['footer'] : '';
+            $icon = isset($data['icon']) ? $data['icon'] : '';
+            $icon_shape = isset($data['icon_shape']) ? $data['icon_shape'] : 'none';
+            $icon_color = isset($data['icon_color']) ? $data['icon_color'] : '';
+            $spacing = isset($data['spacing']) ? $data['spacing'] : '';
+            $class = isset($data['class']) ? $data['class'] : '';
+            
             $code .= "    echo block_card([\n";
             $code .= "        'title' => '" . addslashes($title) . "',\n";
             $code .= "        'content' => '" . addslashes($content) . "',\n";
-            $code .= "        'footer' => '" . addslashes($footer) . "'\n";
+            $code .= "        'footer' => '" . addslashes($footer) . "',\n";
+            $code .= "        'icon' => '" . addslashes($icon) . "',\n";
+            $code .= "        'icon_shape' => '" . addslashes($icon_shape) . "',\n";
+            $code .= "        'icon_color' => '" . addslashes($icon_color) . "',\n";
+            $code .= "        'spacing' => '" . addslashes($spacing) . "',\n";
+            $code .= "        'class' => '" . addslashes($class) . "'\n";
             $code .= "    ]);\n";
             break;
             
         case 'alert':
             $message = isset($data['message']) ? $data['message'] : 'Alert message';
-            $alertType = isset($data['type']) ? $data['type'] : 'info';
             $title = isset($data['title']) ? $data['title'] : '';
+            $alertId = isset($data['alert_id']) ? $data['alert_id'] : '';
+            $alertType = isset($data['alert_type']) ? $data['alert_type'] : 'alert';
+            $alertTheme = isset($data['alert_theme']) ? $data['alert_theme'] : 'info';
+            $dismissable = isset($data['dismissable']) ? $data['dismissable'] : true;
+            $class = isset($data['class']) ? $data['class'] : '';
+            
             $code .= "    echo block_alert([\n";
             $code .= "        'message' => '" . addslashes($message) . "',\n";
+            if ($title) $code .= "        'title' => '" . addslashes($title) . "',\n";
+            if ($alertId) $code .= "        'id' => '" . addslashes($alertId) . "',\n";
             $code .= "        'type' => '{$alertType}',\n";
-            if ($title) {
-                $code .= "        'title' => '" . addslashes($title) . "',\n";
-            }
+            $code .= "        'theme' => '{$alertTheme}',\n";
+            $code .= "        'dismissable' => " . ($dismissable ? 'true' : 'false') . ",\n";
+            if ($class) $code .= "        'class' => '" . addslashes($class) . "',\n";
             $code .= "        'style' => 'inline'\n";
             $code .= "    ]);\n";
             break;
@@ -490,49 +742,99 @@ function generateBlockCode($block) {
             break;
             
         case 'slider':
-            $slides = isset($data['slides']) ? $data['slides'] : [['src' => 'https://placehold.co/800x400', 'alt' => 'Slide 1']];
+            $slides = isset($data['slides']) ? $data['slides'] : [['src' => 'https://placehold.co/800x400', 'alt' => 'Slide 1', 'caption' => '']];
+            $showArrows = isset($data['show_arrows']) ? $data['show_arrows'] : true;
+            $showDots = isset($data['show_dots']) ? $data['show_dots'] : true;
+            $showCaption = isset($data['show_caption']) ? $data['show_caption'] : true;
+            $transition = isset($data['transition']) ? $data['transition'] : 'slide';
             $autoplay = isset($data['autoplay']) ? $data['autoplay'] : true;
+            $class = isset($data['class']) ? $data['class'] : '';
+            
             $code .= "    echo block_slider([\n";
             foreach ($slides as $slide) {
                 $code .= "        [\n";
                 $code .= "            'src' => '" . addslashes($slide['src']) . "',\n";
-                $code .= "            'alt' => '" . addslashes($slide['alt']) . "'\n";
+                $code .= "            'alt' => '" . addslashes($slide['alt']) . "',\n";
+                if (!empty($slide['caption'])) {
+                    $code .= "            'caption' => '" . addslashes($slide['caption']) . "',\n";
+                }
                 $code .= "        ],\n";
             }
-            $autoplayStr = $autoplay ? 'true' : 'false';
-            $code .= "    ], 'image', ['autoplay' => {$autoplayStr}]);\n";
+            $code .= "    ], 'image', [\n";
+            $code .= "        'autoplay' => " . ($autoplay ? 'true' : 'false') . ",\n";
+            $code .= "        'show_arrows' => " . ($showArrows ? 'true' : 'false') . ",\n";
+            $code .= "        'show_dots' => " . ($showDots ? 'true' : 'false') . ",\n";
+            $code .= "        'show_caption' => " . ($showCaption ? 'true' : 'false') . ",\n";
+            $code .= "        'transition' => '{$transition}',\n";
+            if ($class) $code .= "        'class' => '" . addslashes($class) . "',\n";
+            $code .= "    ]);\n";
             break;
             
         case 'menu':
+            $items = isset($data['items']) ? $data['items'] : [['text' => 'Home', 'url' => '#', 'icon' => ''], ['text' => 'About', 'url' => '#', 'icon' => '']];
+            $showIcons = isset($data['show_icons']) ? $data['show_icons'] : false;
+            $menuShape = isset($data['menu_shape']) ? $data['menu_shape'] : 'simple';
             $orientation = isset($data['orientation']) ? $data['orientation'] : 'horizontal';
-            $style = isset($data['style']) ? $data['style'] : 'simple';
+            $class = isset($data['class']) ? $data['class'] : '';
+            
             $code .= "    echo block_menu([\n";
-            $code .= "        ['text' => 'Home', 'url' => '#'],\n";
-            $code .= "        ['text' => 'About', 'url' => '#'],\n";
-            $code .= "        ['text' => 'Contact', 'url' => '#']\n";
-            $code .= "    ], '{$orientation}', '{$style}');\n";
+            foreach ($items as $item) {
+                $code .= "        [\n";
+                $code .= "            'text' => '" . addslashes($item['text']) . "',\n";
+                $code .= "            'url' => '" . addslashes($item['url']) . "',\n";
+                if ($showIcons && !empty($item['icon'])) {
+                    $code .= "            'icon' => '" . addslashes($item['icon']) . "',\n";
+                }
+                $code .= "        ],\n";
+            }
+            $code .= "    ], '{$orientation}', '{$menuShape}');\n";
             break;
             
         case 'social':
-            $platforms = isset($data['platforms']) ? $data['platforms'] : 'facebook,twitter,instagram';
+            $buttons = isset($data['buttons']) ? $data['buttons'] : [['name' => 'Facebook', 'icon' => 'fab fa-facebook', 'url' => '#']];
             $socialStyle = isset($data['style']) ? $data['style'] : 'icon';
-            $platformArray = explode(',', $platforms);
+            $class = isset($data['class']) ? $data['class'] : '';
+            
             $code .= "    echo block_social_buttons([\n";
-            foreach ($platformArray as $platform) {
-                $platform = trim($platform);
-                $code .= "        ['platform' => '{$platform}', 'url' => '#'],\n";
+            foreach ($buttons as $btn) {
+                $code .= "        [\n";
+                $code .= "            'name' => '" . addslashes($btn['name']) . "',\n";
+                $code .= "            'icon' => '" . addslashes($btn['icon']) . "',\n";
+                $code .= "            'url' => '" . addslashes($btn['url']) . "',\n";
+                $code .= "        ],\n";
             }
             $code .= "    ], '{$socialStyle}');\n";
             break;
             
         case 'logo':
+            $type = isset($data['type']) ? $data['type'] : 'text';
             $text = isset($data['text']) ? $data['text'] : 'LOGO';
-            $src = isset($data['src']) ? $data['src'] : '';
+            $imageUrl = isset($data['image_url']) ? $data['image_url'] : '';
+            $textFont = isset($data['text_font']) ? $data['text_font'] : '';
+            $textSize = isset($data['text_size']) ? $data['text_size'] : '';
+            $imageSize = isset($data['image_size']) ? $data['image_size'] : '';
+            
             $code .= "    echo block_logo([\n";
-            if ($src) {
-                $code .= "        'image' => '" . addslashes($src) . "',\n";
+            
+            // Add image if type is 'image' or 'both'
+            if (($type === 'image' || $type === 'both') && $imageUrl) {
+                $code .= "        'image' => '" . addslashes($imageUrl) . "',\n";
+                if ($imageSize) {
+                    $code .= "        'image_size' => '" . addslashes($imageSize) . "',\n";
+                }
             }
-            $code .= "        'text' => '" . addslashes($text) . "'\n";
+            
+            // Add text if type is 'text' or 'both'
+            if ($type === 'text' || $type === 'both') {
+                $code .= "        'text' => '" . addslashes($text) . "',\n";
+                if ($textFont) {
+                    $code .= "        'text_font' => '" . addslashes($textFont) . "',\n";
+                }
+                if ($textSize) {
+                    $code .= "        'text_size' => '" . addslashes($textSize) . "',\n";
+                }
+            }
+            
             $code .= "    ]);\n";
             break;
             
@@ -544,32 +846,78 @@ function generateBlockCode($block) {
         case 'form':
             $action = isset($data['action']) ? $data['action'] : '#';
             $method = isset($data['method']) ? $data['method'] : 'POST';
-            $submitText = isset($data['submit_text']) ? $data['submit_text'] : 'Submit';
-            $code .= "    echo block_form([\n";
-            $code .= "        'action' => '" . addslashes($action) . "',\n";
-            $code .= "        'method' => '{$method}',\n";
-            $code .= "        'submit_text' => '" . addslashes($submitText) . "',\n";
-            $code .= "        'fields' => [\n";
-            $code .= "            ['type' => 'text', 'name' => 'name', 'label' => 'Name', 'required' => true]\n";
-            $code .= "        ]\n";
-            $code .= "    ]);\n";
+            $class = isset($data['class']) ? $data['class'] : '';
+            
+            // Generate child blocks content (form fields)
+            $childrenContent = '';
+            if (isset($block['children']) && is_array($block['children'])) {
+                foreach ($block['children'] as $child) {
+                    $childrenContent .= generateChildBlockCode($child);
+                }
+            }
+            
+            // Use heredoc syntax to avoid escaping issues with HTML
+            if (!empty($childrenContent)) {
+                $code .= "    echo block_form([\n";
+                $code .= "        'action' => '" . addslashes($action) . "',\n";
+                $code .= "        'method' => '{$method}',\n";
+                $code .= "        'class' => '" . addslashes($class) . "',\n";
+                $code .= "        'content' => <<<'HTML'\n";
+                $code .= $childrenContent . "\n";
+                $code .= "HTML\n";
+                $code .= "    ]);\n";
+            } else {
+                // Empty form - just render the form tags
+                $code .= "    echo block_form([\n";
+                $code .= "        'action' => '" . addslashes($action) . "',\n";
+                $code .= "        'method' => '{$method}',\n";
+                $code .= "        'class' => '" . addslashes($class) . "',\n";
+                $code .= "        'content' => ''\n";
+                $code .= "    ]);\n";
+            }
             break;
             
         case 'media':
             $src = isset($data['src']) ? $data['src'] : 'https://placehold.co/600x400';
             $alt = isset($data['alt']) ? $data['alt'] : 'Image';
             $caption = isset($data['caption']) ? $data['caption'] : '';
+            $class = isset($data['class']) ? $data['class'] : '';
+            
             $code .= "    echo block_image(\n";
             $code .= "        '" . addslashes($src) . "',\n";
             $code .= "        '" . addslashes($alt) . "',\n";
-            $code .= "        '" . addslashes($caption) . "'\n";
+            $code .= "        '" . addslashes($caption) . "',\n";
+            $code .= "        '" . addslashes($class) . "'\n";
             $code .= "    );\n";
+            break;
+            
+        // Form field blocks - these are typically used inside form containers
+        case 'checkbox':
+        case 'inputfield':
+        case 'radiobuttons':
+        case 'datepicker':
+        case 'timepicker':
+        case 'datetimepicker':
+        case 'fileupload':
+        case 'passwordfield':
+        case 'selectfield':
+        case 'textareafield':
+        case 'togglefield':
+        case 'clearbutton':
+        case 'submitbutton':
+            // These blocks generate their HTML directly
+            $code .= "    echo '" . addslashes(generateChildBlockCode($block)) . "';\n";
             break;
             
         default:
             // Generic fallback
             $code .= "    // Block type '{$type}' - add implementation\n";
             $code .= "    echo '<div class=\"block-{$type}\">Block: {$type}</div>';\n";
+    }
+    
+    // Close the wrapper div if we have inline styles
+    if (!empty($inlineStyles)) {
+        $code .= "    echo '</div>';\n";
     }
     
     $code .= "    ?>\n\n";

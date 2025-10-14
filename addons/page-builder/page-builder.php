@@ -21,7 +21,21 @@ $availableBlocks = [
     'media' => ['name' => 'Media', 'icon' => '🖼️'],
     'social' => ['name' => 'Social', 'icon' => '👥'],
     'logo' => ['name' => 'Logo', 'icon' => '🏷️'],
-    'markdown' => ['name' => 'Markdown', 'icon' => '📖']
+    'markdown' => ['name' => 'Markdown', 'icon' => '📖'],
+    // Form Field Blocks
+    'checkbox' => ['name' => 'Checkbox', 'icon' => '☑️'],
+    'inputfield' => ['name' => 'Input Field', 'icon' => '📝'],
+    'radiobuttons' => ['name' => 'Radio Buttons', 'icon' => '🔘'],
+    'datepicker' => ['name' => 'Date Picker', 'icon' => '📅'],
+    'timepicker' => ['name' => 'Time Picker', 'icon' => '🕐'],
+    'datetimepicker' => ['name' => 'Date Time Picker', 'icon' => '📆'],
+    'fileupload' => ['name' => 'File Upload', 'icon' => '📎'],
+    'passwordfield' => ['name' => 'Password Field', 'icon' => '🔒'],
+    'selectfield' => ['name' => 'Select Field', 'icon' => '📋'],
+    'textareafield' => ['name' => 'Text Area', 'icon' => '📄'],
+    'togglefield' => ['name' => 'Toggle', 'icon' => '🔄'],
+    'clearbutton' => ['name' => 'Clear Button', 'icon' => '🗑️'],
+    'submitbutton' => ['name' => 'Submit Button', 'icon' => '✅']
 ];
 
 // Get existing pages
@@ -210,28 +224,5 @@ if (is_dir($pagesDir)) {
         </div>
     </div>
 </div>
-
-<style>
-    .pb-wrapper {
-        display: flex;
-        flex-direction: column;
-        overflow: scroll;
-    }
-</style>
-
-<script>
-    // Set viewport height for page builder
-    function setPageBuilderHeight() {
-        const wrapper = document.querySelector('.pb-wrapper');
-        if (wrapper) {
-            const viewportHeight = window.innerHeight;
-            wrapper.style.height = viewportHeight + 'px';
-        }
-    }
-    
-    // Set height on load and resize
-    setPageBuilderHeight();
-    window.addEventListener('resize', setPageBuilderHeight);
-</script>
 
 <script src="/addons/page-builder/page-builder.js"></script>
