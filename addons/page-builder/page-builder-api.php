@@ -812,16 +812,22 @@ function generateBlockCode($block) {
             $imageUrl = isset($data['image_url']) ? $data['image_url'] : '';
             $textFont = isset($data['text_font']) ? $data['text_font'] : '';
             $textSize = isset($data['text_size']) ? $data['text_size'] : '';
-            $imageSize = isset($data['image_size']) ? $data['image_size'] : '';
+            $imageWidth = isset($data['image_width']) ? $data['image_width'] : '';
+            $imageHeight = isset($data['image_height']) ? $data['image_height'] : '';
             
             $code .= "    echo block_logo([\n";
             
             // Add image if type is 'image' or 'both'
             if (($type === 'image' || $type === 'both') && $imageUrl) {
-                $code .= "        'image' => '" . addslashes($imageUrl) . "',\n";
-                if ($imageSize) {
-                    $code .= "        'image_size' => '" . addslashes($imageSize) . "',\n";
-                }
+                $code .= "        'image_url' => '" . addslashes($imageUrl) . "',\n";
+            }
+            
+            // Add image dimensions if provided (regardless of type)
+            if ($imageWidth) {
+                $code .= "        'image_width' => '" . addslashes($imageWidth) . "',\n";
+            }
+            if ($imageHeight) {
+                $code .= "        'image_height' => '" . addslashes($imageHeight) . "',\n";
             }
             
             // Add text if type is 'text' or 'both'

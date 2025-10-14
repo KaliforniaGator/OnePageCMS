@@ -14,11 +14,12 @@
  */
 
 function block_logo($options = []) {
-    $image = $options['image'] ?? '';
+    // Support both old and new parameter names for backwards compatibility
+    $image = $options['image'] ?? $options['image_url'] ?? '';
     $text = $options['text'] ?? '';
-    $alt = $options['alt'] ?? 'Logo';
-    $width = $options['width'] ?? '';
-    $height = $options['height'] ?? '';
+    $alt = $options['alt'] ?? ($text ? $text : 'Logo');
+    $width = $options['width'] ?? $options['image_width'] ?? '';
+    $height = $options['height'] ?? $options['image_height'] ?? '';
     $link = $options['link'] ?? '/';
     $class = $options['class'] ?? '';
     
@@ -26,18 +27,28 @@ function block_logo($options = []) {
     
     // Build style attribute for image dimensions
     $imageStyle = '';
-    if ($width) $imageStyle .= "width: $width;";
-    if ($height) $imageStyle .= "height: $height;";
+    if (!empty($width)) {
+        $imageStyle .= "width: $width; ";
+    }
+    if (!empty($height)) {
+        $imageStyle .= "height: $height; ";
+    }
+    
+    // Add text styling if provided
+    $textStyle = '';
+    if (!empty($options['text_font'])) $textStyle .= "font-family: {$options['text_font']}; ";
+    if (!empty($options['text_size'])) $textStyle .= "font-size: {$options['text_size']}; ";
     
     $html = "<a href=\"$link\" class=\"$classes\">";
     
     if ($image) {
-        $styleAttr = $imageStyle ? " style=\"$imageStyle\"" : '';
-        $html .= "<img src=\"$image\" alt=\"$alt\" class=\"logo-image\"$styleAttr>";
+        $styleAttr = !empty($imageStyle) ? " style=\"" . trim($imageStyle) . "\"" : '';
+        $html .= "<img src=\"$image\" alt=\"" . htmlspecialchars($alt) . "\" class=\"logo-image\"$styleAttr>";
     }
     
     if ($text) {
-        $html .= "<span class=\"logo-text\">$text</span>";
+        $textStyleAttr = !empty($textStyle) ? " style=\"" . trim($textStyle) . "\"" : '';
+        $html .= "<span class=\"logo-text\"$textStyleAttr>" . htmlspecialchars($text) . "</span>";
     }
     
     $html .= "</a>";

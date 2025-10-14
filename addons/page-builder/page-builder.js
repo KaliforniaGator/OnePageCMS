@@ -212,7 +212,8 @@
                 { name: 'text_font', label: 'Text Font', type: 'text', default: '' },
                 { name: 'text_size', label: 'Text Size', type: 'text', default: '' },
                 { name: 'image_url', label: 'Image URL', type: 'text', default: '' },
-                { name: 'image_size', label: 'Image Size', type: 'text', default: '' },
+                { name: 'image_width', label: 'Image Width', type: 'dimension', default: '', units: ['px', '%', 'em', 'rem', 'vw', 'auto'] },
+                { name: 'image_height', label: 'Image Height', type: 'dimension', default: '', units: ['px', '%', 'em', 'rem', 'vh', 'auto'] },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
