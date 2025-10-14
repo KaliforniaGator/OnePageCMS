@@ -8,7 +8,7 @@
 
 // Load configuration
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/framework-includes/class-db.php';
+require_once __DIR__ . '/framework/framework-includes/class-db.php';
 
 // Check if already set up
 $setupComplete = false;

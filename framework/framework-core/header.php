@@ -6,7 +6,7 @@
  * Users should edit /elements/header.php, not this file.
  */
 
-$headerPath = __DIR__ . '/../elements/header.php';
+$headerPath = __DIR__ . '/../../elements/header.php';
 
 if (file_exists($headerPath)) {
     include $headerPath;

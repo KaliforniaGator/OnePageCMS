@@ -9,10 +9,10 @@ The OnePageCMS addon system allows you to extend the framework with modular, sel
 
 ## Directory Structure
 
-All addons are placed in the `framework-addons/` directory:
+All addons are placed in the `addons/` directory:
 
 ```
-framework-addons/
+addons/
 ├── page-builder/
 │   ├── entry.json          # Addon configuration
 │   ├── page-builder.php    # Main page file
@@ -28,10 +28,10 @@ framework-addons/
 
 ### 1. Create Addon Directory
 
-Create a new directory in `framework-addons/` with your addon name (use lowercase and hyphens):
+Create a new directory in `addons/` with your addon name (use lowercase and hyphens):
 
 ```
-framework-addons/my-addon/
+addons/my-addon/
 ```
 
 ### 2. Create entry.json
@@ -318,11 +318,11 @@ You can also manually include assets in your addon page:
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="/framework-addons/my-addon/custom.css">
+    <link rel="stylesheet" href="/addons/my-addon/custom.css">
 </head>
 <body>
     <!-- Your content -->
-    <script src="/framework-addons/my-addon/custom.js"></script>
+    <script src="/addons/my-addon/custom.js"></script>
 </body>
 </html>
 ```
@@ -388,7 +388,7 @@ switch ($action) {
 ### Accessing from JavaScript:
 
 ```javascript
-fetch('/framework-addons/my-addon/api.php?action=getData')
+fetch('/addons/my-addon/api.php?action=getData')
     .then(response => response.json())
     .then(data => console.log(data));
 ```
@@ -443,7 +443,7 @@ if (!defined('BASE_PATH')) {
 ### Directory Structure
 
 ```
-framework-addons/dashboard/
+addons/dashboard/
 ├── entry.json
 ├── dashboard.php
 ├── dashboard.css
@@ -518,7 +518,7 @@ set_page_meta([
 1. Check `enabled: true` in entry.json
 2. Verify JSON syntax is valid
 3. Check file paths are correct
-4. Ensure addon directory is in `framework-addons/`
+4. Ensure addon directory is in `addons/`
 
 ### Assets Not Loading
 

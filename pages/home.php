@@ -59,8 +59,9 @@ set_page_meta([
     <h2>Customization</h2>
     <p>You can customize the look and feel of your site by:</p>
     <ul>
-        <li>Adding custom styles to <code>user-styles/main.css</code></li>
-        <li>Adding custom scripts to <code>user-scripts/main.js</code></li>
+        <li>Editing theme colors and styles in <code>styles/theme.css</code></li>
+        <li>Adding custom styles to <code>styles/main.css</code></li>
+        <li>Adding custom scripts to <code>scripts/main.js</code></li>
         <li>Modifying header and footer in <code>elements/</code> directory</li>
         <li>Adding pages in the <code>pages/</code> directory</li>
     </ul>

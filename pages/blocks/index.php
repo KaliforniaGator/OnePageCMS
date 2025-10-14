@@ -521,7 +521,7 @@ echo block_form([
 ?>', 'code', ['language' => 'php']);
         ?>
         
-        <p style="margin-top: 1rem;">All block functions are automatically loaded and available in any page. Check the files in <code>framework-includes/blocks/</code> to see all available parameters for each block.</p>
+        <p style="margin-top: 1rem;">All block functions are automatically loaded and available in any page. Check the files in <code>framework/framework-includes/blocks/</code> to see all available parameters for each block.</p>
     </section>
     
     <p style="margin-top: 2rem;"><a href="/" class="btn btn-primary">Back to Home</a></p>

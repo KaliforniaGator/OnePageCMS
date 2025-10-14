@@ -1,7 +1,7 @@
 <?php
 /**
  * Addon Loader
- * Automatically discovers and loads addons from framework-addons directory
+ * Automatically discovers and loads addons from addons directory
  */
 
 class AddonLoader {
@@ -10,7 +10,7 @@ class AddonLoader {
     private $loadedAddons = [];
     
     public function __construct($addonsDir = null) {
-        $this->addonsDir = $addonsDir ?: BASE_PATH . '/framework-addons';
+        $this->addonsDir = $addonsDir ?: BASE_PATH . '/addons';
     }
     
     /**
@@ -89,7 +89,7 @@ class AddonLoader {
                         $scripts[] = [
                             'addon' => $addon['id'],
                             'file' => $addon['path'] . '/' . $script['file'],
-                            'url' => '/framework-addons/' . $addon['id'] . '/' . $script['file'],
+                            'url' => '/addons/' . $addon['id'] . '/' . $script['file'],
                             'defer' => isset($script['defer']) ? $script['defer'] : false,
                             'async' => isset($script['async']) ? $script['async'] : false
                         ];
@@ -113,7 +113,7 @@ class AddonLoader {
                     $scope = isset($style['scope']) ? $style['scope'] : 'global';
                     
                     if ($scope === 'global') {
-                        $styles[] = '/framework-addons/' . $addon['id'] . '/' . $style['file'];
+                        $styles[] = '/addons/' . $addon['id'] . '/' . $style['file'];
                     }
                 }
             }

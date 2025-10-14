@@ -702,7 +702,7 @@
 
         console.log('Sending to API:', pageData);
 
-        fetch('/framework-addons/page-builder/page-builder-api.php', {
+        fetch('/addons/page-builder/page-builder-api.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -838,7 +838,7 @@
         });
 
         // Send to API
-        fetch('/framework-addons/page-builder/page-builder-api.php', {
+        fetch('/addons/page-builder/page-builder-api.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -896,7 +896,7 @@
         
         if (!pageName) return;
 
-        fetch('/framework-addons/page-builder/page-builder-api.php?action=load&page=' + encodeURIComponent(pageName))
+        fetch('/addons/page-builder/page-builder-api.php?action=load&page=' + encodeURIComponent(pageName))
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -937,7 +937,7 @@
             return;
         }
 
-        fetch('/framework-addons/page-builder/page-builder-api.php', {
+        fetch('/addons/page-builder/page-builder-api.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -999,10 +999,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preview</title>
-    <link rel="stylesheet" href="/framework-styles/reset.css">
-    <link rel="stylesheet" href="/framework-styles/theme.css">
-    <link rel="stylesheet" href="/framework-styles/blocks.css">
-    <link rel="stylesheet" href="/framework-styles/layout.css">
+    <link rel="stylesheet" href="/framework/framework-styles/reset.css">
+    <link rel="stylesheet" href="/framework/framework-styles/layout.css">
+    <link rel="stylesheet" href="/framework/framework-styles/blocks.css">
+    <link rel="stylesheet" href="/styles/theme.css">
 </head>
 <body>
     <div class="container">

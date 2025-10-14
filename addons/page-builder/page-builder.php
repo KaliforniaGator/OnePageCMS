@@ -234,4 +234,4 @@ if (is_dir($pagesDir)) {
     window.addEventListener('resize', setPageBuilderHeight);
 </script>
 
-<script src="/framework-addons/page-builder/page-builder.js"></script>
+<script src="/addons/page-builder/page-builder.js"></script>

@@ -32,10 +32,10 @@ set_page_meta([
         <li><code>index.php</code> - Universal entry point that loads header, body, and footer</li>
         <li><code>body.php</code> - Handles page routing and loads content from the pages directory</li>
         <li><code>pages/</code> - Directory containing all your page files</li>
-        <li><code>framework-styles/</code> - Core CSS files for the framework</li>
-        <li><code>framework-scripts/</code> - Core JavaScript files for the framework</li>
-        <li><code>user-styles/</code> - Your custom CSS files</li>
-        <li><code>user-scripts/</code> - Your custom JavaScript files</li>
+        <li><code>framework/framework-styles/</code> - Core CSS files for the framework</li>
+        <li><code>framework/framework-scripts/</code> - Core JavaScript files for the framework</li>
+        <li><code>styles/</code> - Your custom CSS files and theme.css</li>
+        <li><code>scripts/</code> - Your custom JavaScript files</li>
     </ul>
     
     <h2>Database Layer</h2>

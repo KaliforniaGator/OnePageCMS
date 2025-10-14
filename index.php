@@ -13,17 +13,17 @@ require_once __DIR__ . '/config.php';
 
 // Load database class only if database is configured
 if (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER') && defined('DB_PASS')) {
-    require_once __DIR__ . '/framework-includes/class-db.php';
+    require_once __DIR__ . '/framework/framework-includes/class-db.php';
 }
 
 // Load page metadata helper
-require_once __DIR__ . '/framework-includes/page-meta.php';
+require_once __DIR__ . '/framework/framework-includes/page-meta.php';
 
 // Load blocks system
-require_once __DIR__ . '/framework-includes/blocks.php';
+require_once __DIR__ . '/framework/framework-includes/blocks.php';
 
 // Load addon system
-require_once __DIR__ . '/framework-includes/addon-loader.php';
+require_once __DIR__ . '/framework/framework-includes/addon-loader.php';
 
 // Load global addon configs (functions, hooks, etc.) - works for all addons
 $GLOBALS['addonLoader']->loadGlobalConfigs();
@@ -32,13 +32,13 @@ $GLOBALS['addonLoader']->loadGlobalConfigs();
 ob_start();
 
 // Load header
-include __DIR__ . '/framework-core/header.php';
+include __DIR__ . '/framework/framework-core/header.php';
 
 // Load main content (this is where set_page_meta() is called)
-include __DIR__ . '/framework-core/body.php';
+include __DIR__ . '/framework/framework-core/body.php';
 
 // Load footer
-include __DIR__ . '/framework-core/footer.php';
+include __DIR__ . '/framework/framework-core/footer.php';
 
 // Get the buffered content
 $pageContent = ob_get_clean();
@@ -47,7 +47,7 @@ $pageContent = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include __DIR__ . '/framework-core/head.php'; ?>
+<?php include __DIR__ . '/framework/framework-core/head.php'; ?>
 <body>
     <?php echo $pageContent; ?>
     
@@ -62,11 +62,11 @@ $pageContent = ob_get_clean();
     </script>
     
     <!-- Framework Scripts -->
-    <script src="/framework-scripts/core.js"></script>
-    <script src="/framework-scripts/blocks.js"></script>
+    <script src="/framework/framework-scripts/core.js"></script>
+    <script src="/framework/framework-scripts/blocks.js"></script>
     
     <!-- User Scripts -->
-    <script src="/user-scripts/main.js"></script>
+    <script src="/scripts/main.js"></script>
     
     <?php
     // Load global addon scripts

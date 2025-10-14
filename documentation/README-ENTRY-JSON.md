@@ -17,7 +17,7 @@ The `entry.json` file is the configuration heart of every addon. It defines meta
 ## File Location
 
 ```
-framework-addons/
+addons/
   └── your-addon/
       └── entry.json
 ```
@@ -543,4 +543,4 @@ Common errors:
 ## Next Steps
 
 - See README-ADDONS.md for addon examples and quick reference
-- Check framework-addons/ directory for reference implementations
+- Check addons/ directory for reference implementations

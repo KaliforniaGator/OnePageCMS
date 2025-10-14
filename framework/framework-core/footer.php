@@ -6,7 +6,7 @@
  * Users should edit /elements/footer.php, not this file.
  */
 
-$footerPath = __DIR__ . '/../elements/footer.php';
+$footerPath = __DIR__ . '/../../elements/footer.php';
 
 if (file_exists($footerPath)) {
     include $footerPath;
