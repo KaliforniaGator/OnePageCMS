@@ -49,13 +49,37 @@ function parseMarkdown($markdown) {
     // Process inline code
     $markdown = preg_replace('/`([^`]+)`/', '<code>$1</code>', $markdown);
     
-    // Process headings
-    $markdown = preg_replace('/^######\s+(.+)$/m', '<h6>$1</h6>', $markdown);
-    $markdown = preg_replace('/^#####\s+(.+)$/m', '<h5>$1</h5>', $markdown);
-    $markdown = preg_replace('/^####\s+(.+)$/m', '<h4>$1</h4>', $markdown);
-    $markdown = preg_replace('/^###\s+(.+)$/m', '<h3>$1</h3>', $markdown);
-    $markdown = preg_replace('/^##\s+(.+)$/m', '<h2>$1</h2>', $markdown);
-    $markdown = preg_replace('/^#\s+(.+)$/m', '<h1>$1</h1>', $markdown);
+    // Process headings with automatic ID generation for anchor links
+    $markdown = preg_replace_callback('/^######\s+(.+)$/m', function($matches) {
+        $text = $matches[1];
+        $id = generateHeadingId($text);
+        return "<h6 id=\"$id\">$text</h6>";
+    }, $markdown);
+    $markdown = preg_replace_callback('/^#####\s+(.+)$/m', function($matches) {
+        $text = $matches[1];
+        $id = generateHeadingId($text);
+        return "<h5 id=\"$id\">$text</h5>";
+    }, $markdown);
+    $markdown = preg_replace_callback('/^####\s+(.+)$/m', function($matches) {
+        $text = $matches[1];
+        $id = generateHeadingId($text);
+        return "<h4 id=\"$id\">$text</h4>";
+    }, $markdown);
+    $markdown = preg_replace_callback('/^###\s+(.+)$/m', function($matches) {
+        $text = $matches[1];
+        $id = generateHeadingId($text);
+        return "<h3 id=\"$id\">$text</h3>";
+    }, $markdown);
+    $markdown = preg_replace_callback('/^##\s+(.+)$/m', function($matches) {
+        $text = $matches[1];
+        $id = generateHeadingId($text);
+        return "<h2 id=\"$id\">$text</h2>";
+    }, $markdown);
+    $markdown = preg_replace_callback('/^#\s+(.+)$/m', function($matches) {
+        $text = $matches[1];
+        $id = generateHeadingId($text);
+        return "<h1 id=\"$id\">$text</h1>";
+    }, $markdown);
     
     // Process bold and italic
     $markdown = preg_replace('/\*\*\*(.+?)\*\*\*/', '<strong><em>$1</em></strong>', $markdown);
@@ -133,5 +157,27 @@ function parseMarkdown($markdown) {
     }
     
     return $html;
+}
+
+/**
+ * Generate a URL-safe ID from heading text for anchor links
+ * 
+ * @param string $text - Heading text
+ * @return string - URL-safe ID
+ */
+function generateHeadingId($text) {
+    // Remove HTML tags if any
+    $text = strip_tags($text);
+    
+    // Convert to lowercase
+    $text = strtolower($text);
+    
+    // Replace spaces and special characters with hyphens
+    $text = preg_replace('/[^a-z0-9]+/', '-', $text);
+    
+    // Remove leading/trailing hyphens
+    $text = trim($text, '-');
+    
+    return $text;
 }
 ?>

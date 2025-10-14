@@ -1,0 +1,29 @@
+{
+  "name": "Sitewide Banner",
+  "version": "1.0.0",
+  "description": "Displays an announcement banner at the top of every page",
+  "author": "OnePageCMS",
+  "type": "utility",
+  "enabled": true,
+  "load": {
+    "config": "config.php",
+    "scripts": [
+      {
+        "file": "banner.js",
+        "scope": "global"
+      }
+    ],
+    "styles": [
+      {
+        "file": "banner.css",
+        "scope": "global"
+      }
+    ]
+  },
+  "settings": {
+    "message": "🎉 Welcome to our site! Check out our latest updates.",
+    "backgroundColor": "#4f46e5",
+    "textColor": "#ffffff",
+    "dismissible": true
+  }
+}

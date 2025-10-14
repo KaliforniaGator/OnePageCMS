@@ -13,17 +13,20 @@ require_once __DIR__ . '/config.php';
 
 // Load database class only if database is configured
 if (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER') && defined('DB_PASS')) {
-    require_once __DIR__ . '/includes/class-db.php';
+    require_once __DIR__ . '/framework-includes/class-db.php';
 }
 
 // Load page metadata helper
-require_once __DIR__ . '/includes/page-meta.php';
+require_once __DIR__ . '/framework-includes/page-meta.php';
 
 // Load blocks system
-require_once __DIR__ . '/includes/blocks.php';
+require_once __DIR__ . '/framework-includes/blocks.php';
 
 // Load addon system
-require_once __DIR__ . '/includes/addon-loader.php';
+require_once __DIR__ . '/framework-includes/addon-loader.php';
+
+// Load global addon configs (functions, hooks, etc.) - works for all addons
+$GLOBALS['addonLoader']->loadGlobalConfigs();
 
 // Start output buffering to capture page content
 ob_start();
@@ -48,12 +51,13 @@ $pageContent = ob_get_clean();
 <body>
     <?php echo $pageContent; ?>
     
-    <!-- Addon Routes Data for JavaScript -->
+    <!-- Addon Data for JavaScript -->
     <script>
-        // Set addon routes before core.js loads
+        // Set addon data before scripts load - works for all addons
         (function() {
             window.OnePageCMS = window.OnePageCMS || {};
             window.OnePageCMS.addonRoutes = <?php echo json_encode(get_addon_routes()); ?>;
+            window.OnePageCMS.addonData = <?php echo json_encode(isset($GLOBALS['addon_data']) ? $GLOBALS['addon_data'] : []); ?>;
         })();
     </script>
     

@@ -128,10 +128,17 @@
             const self = this;
             
             // Get all internal links
-            const internalLinks = document.querySelectorAll('a[href^="/?page="], a[href^="?page="]');
+            const internalLinks = document.querySelectorAll('a[href^="/?page="], a[href^="?page="], a[href^="#"]');
             
             internalLinks.forEach(function(link) {
                 link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    // Skip pure anchor links (starting with #)
+                    if (href && href.startsWith('#')) {
+                        return; // Allow normal anchor navigation
+                    }
+                    
                     // Skip AJAX loading if data-no-ajax attribute is present
                     if (this.hasAttribute('data-no-ajax')) {
                         return; // Allow normal navigation
@@ -140,7 +147,6 @@
                     // Only apply transition if not opening in new tab
                     if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
                         e.preventDefault();
-                        const href = this.getAttribute('href');
                         
                         // Get animation duration based on transition type
                         let duration = 400; // default
@@ -207,8 +213,18 @@
                         // Mark addon links in the new content
                         self.markAddonLinks();
                         
-                        // Scroll to top
-                        window.scrollTo(0, 0);
+                        // Handle anchor scrolling or scroll to top
+                        if (url.includes('#')) {
+                            const anchor = url.split('#')[1];
+                            const targetElement = document.getElementById(anchor);
+                            if (targetElement) {
+                                setTimeout(function() {
+                                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                                }, 100);
+                            }
+                        } else {
+                            window.scrollTo(0, 0);
+                        }
                         
                         // Update active navigation
                         self.highlightCurrentPage();

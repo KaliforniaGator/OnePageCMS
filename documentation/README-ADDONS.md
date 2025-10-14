@@ -2,6 +2,11 @@
 
 The OnePageCMS addon system allows you to extend the framework with modular, self-contained features. Addons are automatically discovered and loaded based on their `entry.json` configuration file.
 
+## Related Documentation
+
+- **README-ENTRY-JSON.md** - Detailed documentation of all configuration options
+- **This Document** - Quick reference and examples
+
 ## Directory Structure
 
 All addons are placed in the `framework-addons/` directory:

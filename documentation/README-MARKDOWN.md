@@ -83,8 +83,11 @@ The markdown parser supports the following features:
 
 ```markdown
 [Link text](https://example.com)
+[Anchor link](#section-name)
 ![Alt text](path/to/image.jpg)
 ```
+
+**Note:** Anchor links work automatically! All headings get an auto-generated ID based on their text.
 
 ### Lists
 
@@ -200,12 +203,43 @@ echo block_markdown('content/about.md');
 ?>
 ```
 
+## Anchor Links
+
+All headings automatically get an ID attribute for anchor linking. The ID is generated from the heading text:
+
+**Heading:**
+```markdown
+## Getting Started
+```
+
+**Generated HTML:**
+```html
+<h2 id="getting-started">Getting Started</h2>
+```
+
+**Link to it:**
+```markdown
+[Jump to Getting Started](#getting-started)
+```
+
+**ID Generation Rules:**
+- Text is converted to lowercase
+- Spaces and special characters become hyphens
+- Multiple hyphens are collapsed to one
+- Leading/trailing hyphens are removed
+
+**Examples:**
+- `# Hello World` → `id="hello-world"`
+- `## API Reference` → `id="api-reference"`
+- `### Step 1: Setup` → `id="step-1-setup"`
+
 ## Tips
 
 1. **File Organization**: Keep markdown files organized in dedicated directories like `documentation/` or `content/`
 2. **Relative Paths**: Use relative paths from the project root without leading slashes
-3. **Syntax Highlighting**: For better code highlighting, consider integrating a syntax highlighting library like Prism.js or Highlight.js
-4. **Performance**: Markdown parsing happens on each request. For high-traffic sites, consider caching the parsed HTML
+3. **Anchor Links**: Use `#heading-text` format for same-page navigation
+4. **Syntax Highlighting**: For better code highlighting, consider integrating a syntax highlighting library like Prism.js or Highlight.js
+5. **Performance**: Markdown parsing happens on each request. For high-traffic sites, consider caching the parsed HTML
 
 ## Related Blocks
 
