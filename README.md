@@ -292,9 +292,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgments
 
-- Built with modern PHP best practices
-- Uses Font Awesome for icons
-- Inspired by simplicity and developer experience
+- KaliforniaGator (Lead Developer)
+- Rafael Rivera (Lead Designer)
 
 ## 📞 Support
 
@@ -304,4 +303,4 @@ For issues, questions, or suggestions:
 
 ---
 
-**Made with ❤️ by the OnePage CMS Team**
+**Made with ❤️ by the GatorSecc CMS Team**
