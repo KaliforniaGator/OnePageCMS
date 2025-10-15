@@ -30,7 +30,7 @@ A lightweight, flexible content management framework built with PHP. Create beau
 
 1. **Clone or download** the repository:
    ```bash
-   git clone https://github.com/yourusername/OnePageCMS.git
+   git clone https://github.com/kaliforniagator/OnePageCMS.git
    cd OnePageCMS
    ```
 
