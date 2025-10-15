@@ -43,6 +43,14 @@ set_page_meta([
             <i class="fas fa-palette"></i> Open Theme Editor
         </a>
     </p>
+
+    <h3>Addon Manager</h3>
+    <p>Manage your addons in one place!</p>
+    <p>
+        <a href="/?page=addon-manager" class="btn btn-primary" data-no-ajax>
+            <i class="fas fa-gear"></i> Addon Manager
+        </a>
+    </p>
     
     <h3>Manual Page Creation</h3>
     <p>Or add pages manually by creating PHP files in the <code>pages/</code> directory:</p>

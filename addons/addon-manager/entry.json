@@ -1,0 +1,39 @@
+{
+  "name": "Addon Manager",
+  "version": "1.0.0",
+  "description": "Manage all addons - enable/disable addons and configure their settings",
+  "author": "OnePageCMS",
+  "type": "page",
+  "enabled": true,
+  "load": {
+    "page": {
+      "file": "addon-manager.php",
+      "route": "addon-manager",
+      "title": "Addon Manager",
+      "menu": {
+        "show": true,
+        "label": "Addon Manager",
+        "icon": "fas fa-puzzle-piece",
+        "position": 160
+      }
+    },
+    "scripts": [
+      {
+        "file": "addon-manager.js",
+        "scope": "page"
+      }
+    ],
+    "styles": [
+      {
+        "file": "addon-manager.css",
+        "scope": "page"
+      }
+    ]
+  },
+  "dependencies": {
+    "font-awesome": true
+  },
+  "permissions": {
+    "manage_addons": true
+  }
+}
