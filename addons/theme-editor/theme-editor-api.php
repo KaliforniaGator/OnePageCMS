@@ -25,10 +25,13 @@ header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
 error_log('Request method: ' . $method);
 
-// Define theme file path
+// Define theme file paths
 define('THEME_FILE', __DIR__ . '/../../styles/theme.css');
+define('THEME_DEFAULTS_FILE', __DIR__ . '/theme-defaults.txt');
 error_log('Theme file path: ' . THEME_FILE);
 error_log('Theme file exists: ' . (file_exists(THEME_FILE) ? 'YES' : 'NO'));
+error_log('Theme defaults file path: ' . THEME_DEFAULTS_FILE);
+error_log('Theme defaults file exists: ' . (file_exists(THEME_DEFAULTS_FILE) ? 'YES' : 'NO'));
 
 // Handle GET requests (load theme)
 if ($method === 'GET') {
@@ -51,6 +54,9 @@ if ($method === 'POST') {
             break;
         case 'load':
             handleLoadTheme();
+            break;
+        case 'reset':
+            handleResetTheme();
             break;
         default:
             sendError('Unknown action');
@@ -76,8 +82,12 @@ function handleLoadTheme() {
     error_log('Parsed variables count: ' . count($variables));
     error_log('Variables: ' . json_encode($variables));
     
+    // Load default values
+    $defaults = loadDefaultValues();
+    
     sendSuccess([
         'variables' => $variables,
+        'defaults' => $defaults,
         'raw' => $content
     ]);
 }
@@ -213,6 +223,57 @@ function sendSuccess($data) {
     error_log('Response: ' . json_encode($response));
     echo json_encode($response);
     exit;
+}
+
+/**
+ * Load default theme values from theme-defaults.txt
+ */
+function loadDefaultValues() {
+    if (!file_exists(THEME_DEFAULTS_FILE)) {
+        error_log('WARNING: Theme defaults file not found');
+        return [];
+    }
+    
+    $content = file_get_contents(THEME_DEFAULTS_FILE);
+    return parseCSSVariables($content);
+}
+
+/**
+ * Reset theme to default values
+ */
+function handleResetTheme() {
+    error_log('handleResetTheme called');
+    
+    if (!file_exists(THEME_DEFAULTS_FILE)) {
+        sendError('Theme defaults file not found');
+    }
+    
+    // Load default values
+    $defaultContent = file_get_contents(THEME_DEFAULTS_FILE);
+    $defaults = parseCSSVariables($defaultContent);
+    
+    if (empty($defaults)) {
+        sendError('Failed to parse default values');
+    }
+    
+    // Read current theme file to preserve structure
+    $currentContent = file_get_contents(THEME_FILE);
+    
+    // Update with default values
+    $resetContent = updateCSSVariables($currentContent, $defaults);
+    
+    // Write back to file
+    $result = file_put_contents(THEME_FILE, $resetContent);
+    
+    if ($result === false) {
+        sendError('Failed to write theme file');
+    }
+    
+    sendSuccess([
+        'message' => 'Theme reset to defaults successfully',
+        'variables' => $defaults,
+        'bytes' => $result
+    ]);
 }
 
 /**

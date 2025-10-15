@@ -9,6 +9,7 @@
     // State
     let themeData = null;
     let originalData = null;
+    let defaultData = null; // True default values from theme-defaults.txt
     let saveTimeout = null;
     let isSaving = false;
 
@@ -71,6 +72,7 @@
 
             themeData = result.data.variables;
             originalData = JSON.parse(JSON.stringify(themeData)); // Deep clone
+            defaultData = result.data.defaults || JSON.parse(JSON.stringify(themeData)); // Default values
             
             renderEditor();
             showEditor();
@@ -385,39 +387,43 @@
      * Handle property reset
      */
     function handlePropertyReset(category, name, item) {
-        const originalValue = originalData[category][name];
-        themeData[category][name] = originalValue;
+        // Use default value if available, otherwise fall back to original
+        const defaultValue = (defaultData && defaultData[category] && defaultData[category][name]) 
+            ? defaultData[category][name] 
+            : originalData[category][name];
+        
+        themeData[category][name] = defaultValue;
         
         // Update input
         const input = item.querySelector('.property-input');
         if (input) {
-            input.value = originalValue;
+            input.value = defaultValue;
             input.classList.remove('modified');
         }
         
         // Update color picker if exists
         const colorPicker = item.querySelector('.color-picker');
         if (colorPicker) {
-            colorPicker.style.background = originalValue;
+            colorPicker.style.background = defaultValue;
         }
         
         const colorInput = item.querySelector('input[type="color"]');
         if (colorInput) {
-            colorInput.value = normalizeColorForPicker(originalValue);
+            colorInput.value = normalizeColorForPicker(defaultValue);
         }
         
         // Update preview if exists
         const previewBox = item.querySelector('.preview-box');
         if (previewBox) {
-            if (originalValue.includes('gradient')) {
-                previewBox.style.background = originalValue;
-            } else if (originalValue.includes('rgba') || originalValue.includes('rgb')) {
-                previewBox.style.boxShadow = originalValue;
+            if (defaultValue.includes('gradient')) {
+                previewBox.style.background = defaultValue;
+            } else if (defaultValue.includes('rgba') || defaultValue.includes('rgb')) {
+                previewBox.style.boxShadow = defaultValue;
             }
         }
         
         // Update CSS variable
-        document.documentElement.style.setProperty(`--${name}`, originalValue);
+        document.documentElement.style.setProperty(`--${name}`, defaultValue);
         
         scheduleAutoSave();
     }
@@ -453,22 +459,60 @@
     /**
      * Handle reset all
      */
-    function handleReset() {
-        if (!confirm('Are you sure you want to reset all properties to their original values?')) {
+    async function handleReset() {
+        if (!confirm('Are you sure you want to reset all properties to their default values? This will restore the original theme.')) {
             return;
         }
         
-        themeData = JSON.parse(JSON.stringify(originalData));
-        renderEditor();
-        
-        // Update all CSS variables
-        Object.entries(themeData).forEach(([category, properties]) => {
-            Object.entries(properties).forEach(([name, value]) => {
-                document.documentElement.style.setProperty(`--${name}`, value);
+        try {
+            updateStatus('saving', 'Resetting...');
+            
+            // Call API to reset theme
+            const response = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'reset'
+                })
             });
-        });
-        
-        scheduleAutoSave();
+            
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to reset theme');
+            }
+            
+            // Update local data with reset values
+            themeData = result.data.variables;
+            originalData = JSON.parse(JSON.stringify(themeData));
+            
+            // Re-render editor
+            renderEditor();
+            
+            // Update all CSS variables
+            Object.entries(themeData).forEach(([category, properties]) => {
+                Object.entries(properties).forEach(([name, value]) => {
+                    document.documentElement.style.setProperty(`--${name}`, value);
+                });
+            });
+            
+            updateStatus('saved', 'Reset complete');
+            
+            setTimeout(() => {
+                updateStatus('ready', 'Ready');
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Error resetting theme:', error);
+            updateStatus('error', 'Reset failed');
+            alert('Failed to reset theme: ' + error.message);
+            
+            setTimeout(() => {
+                updateStatus('ready', 'Ready');
+            }, 3000);
+        }
     }
 
     /**
