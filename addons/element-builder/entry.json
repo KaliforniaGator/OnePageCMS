@@ -1,0 +1,41 @@
+{
+  "name": "Element Builder",
+  "version": "1.0.0",
+  "description": "Visual drag-and-drop builder for editing header and footer elements",
+  "author": "OnePageCMS",
+  "type": "page",
+  "enabled": true,
+  "load": {
+    "page": {
+      "file": "element-builder.php",
+      "route": "element-builder",
+      "title": "Element Builder",
+      "menu": {
+        "show": true,
+        "label": "Element Builder",
+        "icon": "fas fa-layer-group",
+        "position": 101
+      }
+    },
+    "scripts": [
+      {
+        "file": "element-builder.js",
+        "scope": "page"
+      }
+    ],
+    "styles": [
+      {
+        "file": "element-builder.css",
+        "scope": "page"
+      }
+    ]
+  },
+  "dependencies": {
+    "blocks": true,
+    "font-awesome": true
+  },
+  "permissions": {
+    "edit_header": true,
+    "edit_footer": true
+  }
+}

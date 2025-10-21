@@ -993,23 +993,60 @@ function generateBlockCode($block, $skipPhpTags = false) {
             break;
             
         case 'menu':
+            $autoPopulate = isset($data['auto_populate']) && $data['auto_populate'];
             $items = isset($data['items']) ? $data['items'] : [['text' => 'Home', 'url' => '#', 'icon' => ''], ['text' => 'About', 'url' => '#', 'icon' => '']];
             $showIcons = isset($data['show_icons']) ? $data['show_icons'] : false;
             $menuShape = isset($data['menu_shape']) ? $data['menu_shape'] : 'simple';
             $orientation = isset($data['orientation']) ? $data['orientation'] : 'horizontal';
             $class = isset($data['class']) ? $data['class'] : '';
             
-            $code .= "    echo block_menu([\n";
-            foreach ($items as $item) {
-                $code .= "        [\n";
-                $code .= "            'text' => '" . addslashes($item['text']) . "',\n";
-                $code .= "            'url' => '" . addslashes($item['url']) . "',\n";
-                if ($showIcons && !empty($item['icon'])) {
-                    $code .= "            'icon' => '" . addslashes($item['icon']) . "',\n";
+            if ($autoPopulate) {
+                // Generate menu from pages directory
+                $code .= "    // Auto-populate menu from pages directory\n";
+                $code .= "    \$menuItems = [];\n";
+                $code .= "    \$pagesDir = PAGES_DIR; // Use constant from config\n";
+                $code .= "    if (is_dir(\$pagesDir)) {\n";
+                $code .= "        \$files = scandir(\$pagesDir);\n";
+                $code .= "        foreach (\$files as \$file) {\n";
+                $code .= "            if (\$file === '.' || \$file === '..' || \$file[0] === '.') continue;\n";
+                $code .= "            \$filePath = \$pagesDir . '/' . \$file;\n";
+                $code .= "            if (is_file(\$filePath) && pathinfo(\$file, PATHINFO_EXTENSION) === 'php') {\n";
+                $code .= "                \$pageName = pathinfo(\$file, PATHINFO_FILENAME);\n";
+                $code .= "                \$pageTitle = ucwords(str_replace(['-', '_'], ' ', \$pageName));\n";
+                $code .= "                \$menuItems[] = [\n";
+                $code .= "                    'text' => \$pageTitle,\n";
+                $code .= "                    'url' => \$pageName === 'home' ? '/' : '/?page=' . \$pageName\n";
+                $code .= "                ];\n";
+                $code .= "            } elseif (is_dir(\$filePath) && file_exists(\$filePath . '/index.php')) {\n";
+                $code .= "                \$pageTitle = ucwords(str_replace(['-', '_'], ' ', \$file));\n";
+                $code .= "                \$menuItems[] = [\n";
+                $code .= "                    'text' => \$pageTitle,\n";
+                $code .= "                    'url' => '/?page=' . \$file\n";
+                $code .= "                ];\n";
+                $code .= "            }\n";
+                $code .= "        }\n";
+                $code .= "        // Sort menu items alphabetically, but keep Home first\n";
+                $code .= "        usort(\$menuItems, function(\$a, \$b) {\n";
+                $code .= "            if (\$a['url'] === '/') return -1;\n";
+                $code .= "            if (\$b['url'] === '/') return 1;\n";
+                $code .= "            return strcmp(\$a['text'], \$b['text']);\n";
+                $code .= "        });\n";
+                $code .= "    }\n";
+                $code .= "    echo block_menu(\$menuItems, '{$orientation}', '{$menuShape}');\n";
+            } else {
+                // Use manual items
+                $code .= "    echo block_menu([\n";
+                foreach ($items as $item) {
+                    $code .= "        [\n";
+                    $code .= "            'text' => '" . addslashes($item['text']) . "',\n";
+                    $code .= "            'url' => '" . addslashes($item['url']) . "',\n";
+                    if ($showIcons && !empty($item['icon'])) {
+                        $code .= "            'icon' => '" . addslashes($item['icon']) . "',\n";
+                    }
+                    $code .= "        ],\n";
                 }
-                $code .= "        ],\n";
+                $code .= "    ], '{$orientation}', '{$menuShape}');\n";
             }
-            $code .= "    ], '{$orientation}', '{$menuShape}');\n";
             break;
             
         case 'social':

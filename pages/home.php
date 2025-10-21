@@ -35,6 +35,14 @@ set_page_meta([
             <i class="fas fa-hammer"></i> Open Page Builder
         </a>
     </p>
+
+    <h3>Element Builder</h3>
+    <p>Build and edit header and footer elements visually with our drag-and-drop element builder - no coding required!</p>
+    <p>
+        <a href="/?page=element-builder" class="btn btn-primary">
+            <i class="fas fa-layer-group"></i> Open Element Builder
+        </a>
+    </p>
     
     <h3>Theme Editor</h3>
     <p>Customize your site's theme visually by editing colors, typography, spacing, and more!</p>

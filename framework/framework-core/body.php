@@ -56,8 +56,9 @@ $containerClass = trim("container layout-$layoutClass $paddingClass $transitionC
                     $pagePath = PAGES_DIR . '/' . $page . '.php';
                 }
             } else {
-                // Default to home page
-                $pagePath = PAGES_DIR . '/home.php';
+                // Default to home page (configurable in config.php)
+                $homePage = defined('HOME_PAGE') ? HOME_PAGE : 'home';
+                $pagePath = PAGES_DIR . '/' . $homePage . '.php';
             }
 
             // Load the page if it exists, otherwise show 404
