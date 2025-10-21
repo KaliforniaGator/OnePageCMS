@@ -9,16 +9,18 @@
  * @param string $size - Button size: 'small', 'medium', 'large' (default: 'medium')
  * @param string $class - Additional CSS classes (optional)
  * @param string $onclick - JavaScript onclick handler (optional)
+ * @param string $id - Element ID (optional)
  */
 
-function block_button($text, $url = '#', $type = 'primary', $size = 'medium', $class = '', $onclick = '') {
+function block_button($text, $url = '#', $type = 'primary', $size = 'medium', $class = '', $onclick = '', $id = '') {
     $classes = trim("btn btn-$type btn-$size $class");
     $onclickAttr = $onclick ? " onclick=\"$onclick\"" : '';
+    $idAttr = $id ? " id=\"$id\"" : '';
     
     if ($url) {
-        return "<a href=\"$url\" class=\"$classes\"$onclickAttr>$text</a>";
+        return "<a href=\"$url\" class=\"$classes\"$onclickAttr$idAttr>$text</a>";
     } else {
-        return "<button class=\"$classes\"$onclickAttr>$text</button>";
+        return "<button class=\"$classes\"$onclickAttr$idAttr>$text</button>";
     }
 }
 

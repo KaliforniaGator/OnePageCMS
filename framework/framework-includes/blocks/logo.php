@@ -38,6 +38,7 @@ function block_logo($options = []) {
     $textStyle = '';
     if (!empty($options['text_font'])) $textStyle .= "font-family: {$options['text_font']}; ";
     if (!empty($options['text_size'])) $textStyle .= "font-size: {$options['text_size']}; ";
+    if (!empty($options['text_color'])) $textStyle .= "color: {$options['text_color']}; ";
     
     $html = "<a href=\"$link\" class=\"$classes\">";
     

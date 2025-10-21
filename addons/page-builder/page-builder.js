@@ -45,6 +45,19 @@
             acceptsChildren: true,
             fields: [
                 { name: 'width', label: 'Width', type: 'select', options: ['wide', 'narrow', 'full'], default: 'wide' },
+                { name: 'display_type', label: 'Display Type', type: 'select', options: ['block', 'flex', 'grid'], default: 'block' },
+                { name: 'horizontal_align', label: 'Horizontal Alignment', type: 'select', options: ['left', 'center', 'right', 'space-between', 'space-around'], default: 'left' },
+                { name: 'flow_direction', label: 'Flow Direction', type: 'select', options: ['horizontal', 'vertical'], default: 'vertical' },
+                { name: 'gap', label: 'Gap (spacing between items)', type: 'text', default: '', placeholder: 'e.g., 1rem, 20px' },
+                { name: 'background_type', label: 'Background Type', type: 'select', options: ['none', 'color', 'gradient', 'image'], default: 'none' },
+                { name: 'background_color', label: 'Background Color', type: 'text', default: '', condition: 'background_type', conditionValue: 'color' },
+                { name: 'background_gradient', label: 'Background Gradient', type: 'text', default: '', condition: 'background_type', conditionValue: 'gradient' },
+                { name: 'background_image', label: 'Background Image URL', type: 'text', default: '', condition: 'background_type', conditionValue: 'image' },
+                { name: 'border_style', label: 'Border Style', type: 'select', options: ['none', 'solid', 'dashed', 'dotted'], default: 'none' },
+                { name: 'border_width', label: 'Border Width', type: 'text', default: '1px', condition: 'border_style', conditionValue: ['solid', 'dashed', 'dotted'] },
+                { name: 'border_color', label: 'Border Color', type: 'text', default: '#000000', condition: 'border_style', conditionValue: ['solid', 'dashed', 'dotted'] },
+                { name: 'corner_radius', label: 'Corner Radius', type: 'text', default: '' },
+                { name: 'shadow', label: 'Box Shadow', type: 'text', default: '' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -56,10 +69,11 @@
                 { name: 'content', label: 'Content', type: 'textarea', default: 'Sample text content' },
                 { name: 'type', label: 'Type', type: 'select', options: ['paragraph', 'heading', 'quote', 'code'], default: 'paragraph' },
                 { name: 'level', label: 'Heading Level (if heading)', type: 'number', default: 2 },
-                { name: 'class', label: 'CSS Class', type: 'text', default: '' },
-                { name: 'font_family', label: 'Font Family', type: 'text', default: '' },
-                { name: 'font_size', label: 'Font Size', type: 'text', default: '' },
+                { name: 'author', label: 'Author (for quote)', type: 'text', default: '', condition: 'type', conditionValue: 'quote' },
+                { name: 'font_family', label: 'Font Family', type: 'select', options: ['default', 'Arial', 'Helvetica', 'Times New Roman', 'Georgia', 'Courier New', 'Verdana', 'Trebuchet MS', 'Impact', 'Comic Sans MS', 'Palatino', 'Garamond', 'Bookman', 'Tahoma', 'Lucida Console'], default: 'default' },
+                { name: 'font_size', label: 'Font Size', type: 'dimension', default: '', units: ['px', 'em', 'rem', '%', 'pt'] },
                 { name: 'font_weight', label: 'Font Weight', type: 'select', options: ['normal', 'bold', '100', '200', '300', '400', '500', '600', '700', '800', '900'], default: 'normal' },
+                { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
         },
@@ -71,6 +85,9 @@
                 { name: 'url', label: 'URL', type: 'text', default: '#' },
                 { name: 'type', label: 'Style', type: 'select', options: ['primary', 'secondary', 'success', 'danger', 'outline'], default: 'primary' },
                 { name: 'size', label: 'Size', type: 'select', options: ['small', 'medium', 'large'], default: 'medium' },
+                { name: 'alignment', label: 'Alignment', type: 'select', options: ['left', 'center', 'right'], default: 'left' },
+                { name: 'border_radius', label: 'Border Radius', type: 'text', default: '' },
+                { name: 'button_id', label: 'Button ID', type: 'text', default: '' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -96,6 +113,7 @@
                 { name: 'icon_shape', label: 'Icon Shape', type: 'select', options: ['circle', 'square', 'rounded', 'none'], default: 'none' },
                 { name: 'icon_color', label: 'Icon Color', type: 'text', default: '' },
                 { name: 'spacing', label: 'Spacing', type: 'text', default: '' },
+                { name: 'text_align', label: 'Text Align', type: 'select', options: ['left', 'center', 'right'], default: 'left' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -109,7 +127,10 @@
                 { name: 'alert_id', label: 'Alert ID', type: 'text', default: '' },
                 { name: 'alert_type', label: 'Alert Type', type: 'select', options: ['toast', 'popup', 'alert'], default: 'alert' },
                 { name: 'alert_theme', label: 'Alert Theme', type: 'select', options: ['success', 'danger', 'info', 'warning', 'primary', 'secondary'], default: 'info' },
+                { name: 'is_centered', label: 'Center Popup', type: 'checkbox', default: false, condition: 'alert_type', conditionValue: 'popup' },
                 { name: 'dismissable', label: 'Dismissable', type: 'checkbox', default: true },
+                { name: 'dismissal_mode', label: 'Dismissal Mode', type: 'select', options: ['temporary', 'permanent'], default: 'temporary' },
+                { name: 'hidden_by_default', label: 'Hidden by Default', type: 'checkbox', default: false },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -117,11 +138,21 @@
         hero: {
             name: 'Hero',
             defaultContent: '<div class="hero"><h1>Hero Title</h1><p>Hero subtitle</p></div>',
+            acceptsChildren: true,
             fields: [
                 { name: 'title', label: 'Title', type: 'text', default: 'Hero Title' },
                 { name: 'subtitle', label: 'Subtitle', type: 'text', default: 'Hero subtitle' },
                 { name: 'type', label: 'Type', type: 'select', options: ['default', 'gradient', 'split', 'minimal'], default: 'default' },
-                { name: 'background', label: 'Background Image URL', type: 'text', default: '' },
+                { name: 'text_align', label: 'Text Align', type: 'select', options: ['left', 'center', 'right'], default: 'center' },
+                { name: 'background_type', label: 'Background Type', type: 'select', options: ['none', 'color', 'gradient', 'image'], default: 'none' },
+                { name: 'background_color', label: 'Background Color', type: 'text', default: '', condition: 'background_type', conditionValue: 'color' },
+                { name: 'background_gradient', label: 'Background Gradient', type: 'text', default: '', condition: 'background_type', conditionValue: 'gradient' },
+                { name: 'background_image', label: 'Background Image URL', type: 'text', default: '', condition: 'background_type', conditionValue: 'image' },
+                { name: 'split_layout', label: 'Split Side Layout', type: 'select', options: ['none', 'left-content', 'right-content'], default: 'none' },
+                { name: 'split_background_type', label: 'Split Side Background Type', type: 'select', options: ['none', 'color', 'gradient', 'image'], default: 'none', condition: 'split_layout', conditionValue: ['left-content', 'right-content'] },
+                { name: 'split_background_color', label: 'Split Side Background Color', type: 'text', default: '', condition: 'split_background_type', conditionValue: 'color' },
+                { name: 'split_background_gradient', label: 'Split Side Background Gradient', type: 'text', default: '', condition: 'split_background_type', conditionValue: 'gradient' },
+                { name: 'split_background_image', label: 'Split Side Background Image URL', type: 'text', default: '', condition: 'split_background_type', conditionValue: 'image' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -143,6 +174,19 @@
             fields: [
                 { name: 'action', label: 'Form Action URL', type: 'text', default: '#' },
                 { name: 'method', label: 'Method', type: 'select', options: ['POST', 'GET'], default: 'POST' },
+                { name: 'display_type', label: 'Display Type', type: 'select', options: ['block', 'flex', 'grid'], default: 'block' },
+                { name: 'horizontal_align', label: 'Horizontal Alignment', type: 'select', options: ['left', 'center', 'right', 'space-between', 'space-around'], default: 'left' },
+                { name: 'flow_direction', label: 'Flow Direction', type: 'select', options: ['horizontal', 'vertical'], default: 'vertical' },
+                { name: 'gap', label: 'Gap (spacing between items)', type: 'text', default: '', placeholder: 'e.g., 1rem, 20px' },
+                { name: 'background_type', label: 'Background Type', type: 'select', options: ['none', 'color', 'gradient', 'image'], default: 'none' },
+                { name: 'background_color', label: 'Background Color', type: 'text', default: '', condition: 'background_type', conditionValue: 'color' },
+                { name: 'background_gradient', label: 'Background Gradient', type: 'text', default: '', condition: 'background_type', conditionValue: 'gradient' },
+                { name: 'background_image', label: 'Background Image URL', type: 'text', default: '', condition: 'background_type', conditionValue: 'image' },
+                { name: 'border_style', label: 'Border Style', type: 'select', options: ['none', 'solid', 'dashed', 'dotted'], default: 'none' },
+                { name: 'border_width', label: 'Border Width', type: 'text', default: '1px', condition: 'border_style', conditionValue: ['solid', 'dashed', 'dotted'] },
+                { name: 'border_color', label: 'Border Color', type: 'text', default: '#000000', condition: 'border_style', conditionValue: ['solid', 'dashed', 'dotted'] },
+                { name: 'corner_radius', label: 'Corner Radius', type: 'text', default: '' },
+                { name: 'shadow', label: 'Box Shadow', type: 'text', default: '' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -152,6 +196,11 @@
             defaultContent: '<div class="accordion"><div class="accordion-item"><h3>Section 1</h3><p>Content 1</p></div></div>',
             fields: [
                 { name: 'sections', label: 'Accordion Sections', type: 'repeater', default: [{title: 'Section 1', content: 'Content 1'}] },
+                { name: 'text_align', label: 'Text Align', type: 'select', options: ['left', 'center', 'right'], default: 'left' },
+                { name: 'icon_style', label: 'Icon Style', type: 'select', options: ['+/-', 'arrow', '+/x'], default: '+/-' },
+                { name: 'icon_shape', label: 'Icon Shape', type: 'select', options: ['rounded-square', 'circle', 'rect'], default: 'rounded-square' },
+                { name: 'header_color', label: 'Header Color', type: 'text', default: '' },
+                { name: 'header_text_style', label: 'Header Text Style', type: 'select', options: ['h1', 'h2', 'h3', 'bold', 'underlined'], default: 'h3' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -178,6 +227,9 @@
                 { name: 'show_icons', label: 'Show Icons', type: 'checkbox', default: false },
                 { name: 'menu_shape', label: 'Menu Shape', type: 'select', options: ['simple', 'rounded-rect', 'capsule'], default: 'simple' },
                 { name: 'orientation', label: 'Orientation', type: 'select', options: ['horizontal', 'vertical'], default: 'horizontal' },
+                { name: 'hamburger_menu', label: 'Hamburger Menu', type: 'checkbox', default: false },
+                { name: 'auto_populate', label: 'Auto-Populate from Pages', type: 'checkbox', default: false },
+                { name: 'hover_color', label: 'Hover Color', type: 'text', default: '' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -199,6 +251,9 @@
             fields: [
                 { name: 'buttons', label: 'Social Buttons', type: 'repeater', default: [{name: 'Facebook', icon: 'fab fa-facebook', url: '#'}, {name: 'Twitter', icon: 'fab fa-twitter', url: '#'}] },
                 { name: 'style', label: 'Style', type: 'select', options: ['icon', 'text', 'both'], default: 'icon' },
+                { name: 'icon_color', label: 'Icon Color', type: 'text', default: '' },
+                { name: 'hover_color', label: 'Hover Color', type: 'text', default: '' },
+                { name: 'button_shape', label: 'Button Shape', type: 'select', options: ['rounded-rect', 'circle', 'rect'], default: 'rounded-rect' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -211,6 +266,7 @@
                 { name: 'text', label: 'Logo Text', type: 'text', default: 'LOGO' },
                 { name: 'text_font', label: 'Text Font', type: 'text', default: '' },
                 { name: 'text_size', label: 'Text Size', type: 'text', default: '' },
+                { name: 'text_color', label: 'Text Color', type: 'text', default: '' },
                 { name: 'image_url', label: 'Image URL', type: 'text', default: '' },
                 { name: 'image_width', label: 'Image Width', type: 'dimension', default: '', units: ['px', '%', 'em', 'rem', 'vw', 'auto'] },
                 { name: 'image_height', label: 'Image Height', type: 'dimension', default: '', units: ['px', '%', 'em', 'rem', 'vh', 'auto'] },
@@ -223,6 +279,28 @@
             defaultContent: '<div class="markdown-content">Markdown content</div>',
             fields: [
                 { name: 'content', label: 'Markdown File Path', type: 'text', default: 'documentation/README.md' },
+                { name: 'class', label: 'CSS Class', type: 'text', default: '' },
+                ...commonFields
+            ]
+        },
+        codeblock: {
+            name: 'Codeblock',
+            defaultContent: '<div class="block-codeblock"><!-- Embedded code --></div>',
+            fields: [
+                { name: 'type', label: 'Code Type', type: 'select', options: ['html', 'css', 'js', 'action'], default: 'html' },
+                { name: 'content', label: 'Code Content', type: 'textarea', default: '', rows: 10 },
+                { name: 'trigger_object', label: 'Trigger Element (CSS Selector)', type: 'text', default: '', condition: 'type', conditionValue: 'action' },
+                { name: 'alert_object', label: 'Alert ID', type: 'text', default: '', condition: 'type', conditionValue: 'action' },
+                { name: 'codeblock_id', label: 'Codeblock ID', type: 'text', default: '' },
+                { name: 'class', label: 'CSS Class', type: 'text', default: '' },
+                ...commonFields
+            ]
+        },
+        anchor: {
+            name: 'Anchor',
+            defaultContent: '<div class="block-anchor">Anchor Point</div>',
+            fields: [
+                { name: 'anchor_id', label: 'Anchor ID', type: 'text', default: '' },
                 { name: 'class', label: 'CSS Class', type: 'text', default: '' },
                 ...commonFields
             ]
@@ -1735,16 +1813,48 @@
         const canvas = document.getElementById('pb-canvas');
         const blocks = Array.from(canvas.querySelectorAll('.pb-canvas-block'));
         
-        const pageData = blocks.map(block => ({
-            type: block.dataset.blockType,
-            data: JSON.parse(block.dataset.blockData || '{}')
-        }));
+        const pageData = blocks.map(block => {
+            const blockData = {
+                type: block.dataset.blockType,
+                data: JSON.parse(block.dataset.blockData || '{}')
+            };
+            
+            // Include children if block accepts them
+            const childrenContainer = block.querySelector('.pb-block-children');
+            if (childrenContainer) {
+                const childBlocks = Array.from(childrenContainer.querySelectorAll(':scope > .pb-canvas-block'));
+                if (childBlocks.length > 0) {
+                    blockData.children = childBlocks.map(child => ({
+                        type: child.dataset.blockType,
+                        data: JSON.parse(child.dataset.blockData || '{}')
+                    }));
+                }
+            }
+            
+            return blockData;
+        });
 
-        // Generate preview HTML
-        const sourceHTML = generatePreviewHTML(pageData);
-        
-        document.getElementById('pb-source-code').value = sourceHTML;
-        document.getElementById('pb-source-modal').classList.add('active');
+        // Fetch generated PHP code from server
+        fetch('/addons/page-builder/page-builder-api.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: 'generate_code', blocks: pageData })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('pb-source-code').value = data.code;
+                document.getElementById('pb-source-modal').classList.add('active');
+            } else {
+                alert('Error generating source code: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error generating source code');
+        });
     }
 
     function generatePreviewHTML(blocks) {
@@ -1759,18 +1869,21 @@
     <link rel="stylesheet" href="/framework/framework-styles/layout.css">
     <link rel="stylesheet" href="/framework/framework-styles/blocks.css">
     <link rel="stylesheet" href="/styles/theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
 `;
 
         blocks.forEach(block => {
-            const data = block.data;
-            // Simplified rendering - in production, this would call actual PHP block functions
-            html += `<div class="block block-${block.type}" style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 4px;">`;
-            html += `<strong>${block.type.toUpperCase()}</strong><br>`;
-            html += `<pre style="font-size: 0.85rem; margin-top: 0.5rem;">${JSON.stringify(data, null, 2)}</pre>`;
-            html += `</div>`;
+            // Render actual block HTML from canvas
+            const canvasBlock = document.querySelector(`[data-block-id="${block.id}"]`);
+            if (canvasBlock) {
+                const blockContent = canvasBlock.querySelector('.pb-block-content');
+                if (blockContent) {
+                    html += blockContent.innerHTML;
+                }
+            }
         });
 
         html += `

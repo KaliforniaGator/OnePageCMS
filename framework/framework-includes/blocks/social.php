@@ -7,10 +7,21 @@
  * @param string $style - Button style: 'icon', 'text', 'both' (default: 'icon')
  * @param string $size - Button size: 'small', 'medium', 'large' (default: 'medium')
  * @param string $shape - Button shape: 'circle', 'rounded-rect', 'rect', 'plain' (default: 'rounded-rect')
+ * @param array $options - Additional options (icon_color, hover_color)
  */
 
-function block_social_buttons($links, $style = 'icon', $size = 'medium', $shape = 'rounded-rect') {
+function block_social_buttons($links, $style = 'icon', $size = 'medium', $shape = 'rounded-rect', $options = []) {
     $classes = "block-social social-$style social-$size social-shape-$shape";
+    
+    // Build inline styles for icon and hover colors
+    $inlineStyles = [];
+    if (!empty($options['icon_color'])) {
+        $inlineStyles[] = 'color: ' . $options['icon_color'];
+    }
+    $styleAttr = !empty($inlineStyles) ? ' style="' . implode('; ', $inlineStyles) . '"' : '';
+    
+    // Add hover color as data attribute for CSS
+    $hoverColorAttr = !empty($options['hover_color']) ? ' data-hover-color="' . htmlspecialchars($options['hover_color']) . '"' : '';
     
     $html = "<div class=\"$classes\">";
     
@@ -47,7 +58,7 @@ function block_social_buttons($links, $style = 'icon', $size = 'medium', $shape 
         $iconClass = $link['icon'] ?? ($icons[$platform] ?? 'fas fa-link');
         $label = $link['name'] ?? ucfirst($platform);
         
-        $html .= "<a href=\"$url\" class=\"social-link social-$platform\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"$label\">";
+        $html .= "<a href=\"$url\" class=\"social-link social-$platform\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"$label\"$styleAttr$hoverColorAttr>";
         
         if ($style === 'icon' || $style === 'both') {
             $html .= "<i class=\"$iconClass social-icon\"></i>";

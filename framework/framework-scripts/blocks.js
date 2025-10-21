@@ -89,6 +89,33 @@ function switchTab(tabsId, index) {
     panes[index].classList.add('active');
 }
 
+// Alert Functions
+function dismissAlert(alertId, dismissalMode) {
+    const alert = document.getElementById(alertId);
+    if (!alert) return;
+    
+    // Add dismissing animation class
+    alert.classList.add('alert-dismissing');
+    
+    // Wait for animation to complete
+    setTimeout(() => {
+        if (dismissalMode === 'permanent') {
+            // Set cookie to remember dismissal (expires in 1 year)
+            const expiryDate = new Date();
+            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+            document.cookie = `alert_dismissed_${alertId}=true; expires=${expiryDate.toUTCString()}; path=/`;
+        }
+        
+        // Remove from DOM (temporary) or hide (can be reshown by codeblock)
+        if (dismissalMode === 'permanent') {
+            alert.remove();
+        } else {
+            alert.classList.add('hidden');
+            alert.classList.remove('alert-dismissing');
+        }
+    }, 300);
+}
+
 // Smooth scroll for anchor links
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

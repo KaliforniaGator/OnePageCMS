@@ -21,12 +21,19 @@ function block_alert($config) {
     $type = $config['type'] ?? 'info';
     $style = $config['style'] ?? 'inline';
     $dismissible = $config['dismissible'] ?? true;
+    $dismissalMode = $config['dismissal_mode'] ?? 'temporary';
     $icon = $config['icon'] ?? getDefaultIcon($type);
     $title = $config['title'] ?? '';
     $duration = $config['duration'] ?? 5000;
     $position = $config['position'] ?? 'top-right';
     $id = $config['id'] ?? 'alert-' . uniqid();
     $class = $config['class'] ?? '';
+    $hidden = $config['hidden'] ?? false;
+    
+    // Check if alert was permanently dismissed (cookie)
+    if ($dismissalMode === 'permanent' && isset($_COOKIE['alert_dismissed_' . $id])) {
+        return ''; // Don't render if permanently dismissed
+    }
     
     if (empty($message)) {
         return '';
@@ -40,6 +47,11 @@ function block_alert($config) {
     
     if ($class) {
         $alertClasses .= " $class";
+    }
+    
+    // Add hidden class if hidden by default
+    if ($hidden) {
+        $alertClasses .= " hidden";
     }
     
     $html = "<div id=\"$id\" class=\"$alertClasses\" role=\"alert\"";
@@ -70,7 +82,7 @@ function block_alert($config) {
     
     // Dismiss button
     if ($dismissible) {
-        $html .= "<button class=\"alert-close\" onclick=\"dismissAlert('$id')\" aria-label=\"Close\">";
+        $html .= "<button class=\"alert-close\" onclick=\"dismissAlert('$id', '$dismissalMode')\" aria-label=\"Close\" data-dismissal-mode=\"$dismissalMode\">";
         $html .= "<i class=\"fas fa-times\"></i>";
         $html .= "</button>";
     }

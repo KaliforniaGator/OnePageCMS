@@ -15,12 +15,20 @@ function block_card($config) {
     $icon_shape = $config['icon_shape'] ?? 'none';
     $icon_color = $config['icon_color'] ?? '';
     $spacing = $config['spacing'] ?? '';
+    $text_align = $config['text_align'] ?? '';
     $class = $config['class'] ?? '';
     
-    // Build spacing style
-    $spacingStyle = $spacing ? " style=\"padding: $spacing;\"" : '';
+    // Build inline styles
+    $inlineStyles = [];
+    if ($spacing) {
+        $inlineStyles[] = 'padding: ' . $spacing;
+    }
+    if ($text_align) {
+        $inlineStyles[] = 'text-align: ' . $text_align;
+    }
+    $styleAttr = !empty($inlineStyles) ? ' style="' . implode('; ', $inlineStyles) . '"' : '';
     
-    $html = "<div class=\"block-card $class\"$spacingStyle>";
+    $html = "<div class=\"block-card $class\"$styleAttr>";
     
     // Add icon if provided
     if ($icon) {

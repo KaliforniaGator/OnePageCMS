@@ -3,6 +3,19 @@
  * Styles for all block components
  */
 
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+/* Anchor Blocks */
+.block-anchor {
+    position: relative;
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
 /* Container Blocks */
 .block-container {
     margin: 0 auto;
@@ -215,10 +228,8 @@ a.btn-outline:focus {
 /* Form Blocks */
 .block-form {
     max-width: 600px;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-group label {
@@ -233,12 +244,17 @@ a.btn-outline:focus {
     margin-left: var(--spacing-xs);
 }
 
+/* Text inputs, textareas, and selects */
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"],
 .form-group input[type="number"],
 .form-group input[type="tel"],
 .form-group input[type="url"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group input[type="datetime-local"],
+.form-group input[type="file"],
 .form-group textarea,
 .form-group select {
     width: 100%;
@@ -247,6 +263,9 @@ a.btn-outline:focus {
     border-radius: var(--radius-sm);
     font-size: var(--font-size-base);
     font-family: inherit;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group textarea {
@@ -260,6 +279,145 @@ a.btn-outline:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Checkbox styling */
+.form-group.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.form-group.checkbox-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.form-group input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: var(--spacing-sm);
+    cursor: pointer;
+}
+
+/* Radio button styling */
+.form-group.radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.radio-group > label:first-child {
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
+.form-group.radio-group .radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+}
+
+.form-group.radio-group .radio-label:last-child {
+    margin-bottom: 0;
+}
+
+.form-group input[type="radio"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: var(--spacing-md);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* Toggle Switch styling */
+.form-group.toggle-group {
+    display: flex;
+    align-items: center;
+}
+
+.form-group.toggle-group .toggle-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.form-group .toggle-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.form-group .toggle-slider {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    background-color: var(--color-gray-400);
+    border-radius: var(--radius-full);
+    transition: background-color 0.3s;
+    margin-right: var(--spacing-md);
+}
+
+.form-group .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    top: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.form-group .toggle-input:checked + .toggle-slider {
+    background-color: var(--color-primary);
+}
+
+.form-group .toggle-input:checked + .toggle-slider::before {
+    transform: translateX(24px);
+}
+
+.form-group .toggle-input:focus + .toggle-slider {
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* File Upload styling */
+.form-group input[type="file"] {
+    padding: var(--spacing-sm);
+    cursor: pointer;
+}
+
+.form-group input[type="file"]::file-selector-button {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    margin-right: var(--spacing-md);
+    transition: background-color 0.2s;
+}
+
+.form-group input[type="file"]::file-selector-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+/* Select dropdown arrow */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--spacing-md) center;
+    background-size: 12px;
+    padding-right: calc(var(--spacing-md) * 3);
 }
 
 .form-help {
@@ -415,7 +573,7 @@ a.btn-outline:focus {
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.7);
-    color: white;
+    color: var(--color-white);
     padding: 1rem;
     text-align: center;
     z-index: 10;
@@ -427,7 +585,7 @@ a.btn-outline:focus {
     top: 50%;
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.5);
-    color: white;
+    color: var(--color-white);
     border: none;
     padding: 1rem;
     font-size: 2rem;
@@ -470,7 +628,7 @@ a.btn-outline:focus {
 
 .slider-dots .dot.active,
 .slider-dots .dot:hover {
-    background: white;
+    background: var(--color-white);
 }
 
 /* TextView Blocks */
@@ -590,27 +748,40 @@ a.btn-outline:focus {
 
 /* Alert Types - Colors */
 .alert-info {
-    background: #d1ecf1;
-    border-left: 4px solid #0c5460;
-    color: #0c5460;
+    background: color-mix(in srgb, var(--color-info) 20%, white);
+    border-left: 4px solid var(--color-info-dark);
+    color: var(--color-info-dark);
 }
 
 .alert-success {
-    background: #d4edda;
-    border-left: 4px solid #155724;
-    color: #155724;
+    background: color-mix(in srgb, var(--color-success) 20%, white);
+    border-left: 4px solid var(--color-success-dark);
+    color: var(--color-success-dark);
 }
 
 .alert-warning {
-    background: #fff3cd;
-    border-left: 4px solid #856404;
-    color: #856404;
+    background: color-mix(in srgb, var(--color-warning) 20%, white);
+    border-left: 4px solid var(--color-warning-dark);
+    color: var(--color-warning-dark);
 }
 
-.alert-error {
-    background: #f8d7da;
-    border-left: 4px solid #721c24;
-    color: #721c24;
+.alert-error,
+.alert-danger {
+    background: color-mix(in srgb, var(--color-danger) 20%, white);
+    border-left: 4px solid var(--color-danger-dark);
+    color: var(--color-danger-dark);
+}
+
+.alert-primary {
+    background: color-mix(in srgb, var(--color-primary) 20%, white);
+    border-left: 4px solid var(--color-primary-dark);
+    color: var(--color-primary-dark);
+}
+
+.alert-secondary {
+    background: color-mix(in srgb, var(--color-secondary) 30%, white);
+    border-left: 4px solid var(--color-secondary-dark);
+    color: var(--color-secondary-dark);
 }
 
 /* Alert Style: Inline (default) */
@@ -629,19 +800,28 @@ a.btn-outline:focus {
 }
 
 .alert-style-banner.alert-info {
-    border-bottom-color: #0c5460;
+    border-bottom-color: var(--color-info-dark);
 }
 
 .alert-style-banner.alert-success {
-    border-bottom-color: #155724;
+    border-bottom-color: var(--color-success-dark);
 }
 
 .alert-style-banner.alert-warning {
-    border-bottom-color: #856404;
+    border-bottom-color: var(--color-warning-dark);
 }
 
-.alert-style-banner.alert-error {
-    border-bottom-color: #721c24;
+.alert-style-banner.alert-error,
+.alert-style-banner.alert-danger {
+    border-bottom-color: var(--color-danger-dark);
+}
+
+.alert-style-banner.alert-primary {
+    border-bottom-color: var(--color-primary-dark);
+}
+
+.alert-style-banner.alert-secondary {
+    border-bottom-color: var(--color-secondary-dark);
 }
 
 /* Alert Style: Toast */
@@ -929,7 +1109,7 @@ a.btn-outline:focus {
     position: absolute;
     top: 100%;
     left: 0;
-    background: white;
+    background: var(--color-white);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     list-style: none;
     padding: 0.5rem 0;
@@ -997,7 +1177,7 @@ a.btn-outline:focus {
     justify-content: center;
     background-size: cover;
     background-position: center;
-    color: white;
+    color: var(--color-white);
     text-align: center;
     padding: 2rem;
 }
@@ -1008,7 +1188,7 @@ a.btn-outline:focus {
     left: 0;
     right: 0;
     bottom: 0;
-    background: black;
+    background: var(--color-black);
 }
 
 .hero-content {
@@ -1170,11 +1350,11 @@ a.btn-outline:focus {
 
 /* Card Blocks */
 .block-card {
-    background: white;
-    border-radius: 8px;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .block-card:hover {
@@ -1641,12 +1821,12 @@ a.btn-outline:focus {
 }
 
 .block-markdown code {
-    background: var(--color-surface);
+    background: var(--color-gray-100);
     padding: 0.2em 0.4em;
     border-radius: var(--radius-xs);
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.9em;
-    color: #d63384;
+    color: var(--color-info);
 }
 
 .block-markdown pre {
@@ -1714,11 +1894,11 @@ a.btn-outline:focus {
 }
 
 .block-markdown .error {
-    color: #dc3545;
-    background: #f8d7da;
+    color: var(--color-danger);
+    background: color-mix(in srgb, var(--color-danger) 20%, white);
     padding: 1em;
     border-radius: var(--radius-sm);
-    border: 1px solid #dc3545;
+    border: 1px solid var(--color-danger);
 }
 
 /* Documentation List */

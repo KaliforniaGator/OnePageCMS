@@ -21,6 +21,8 @@ $blockFiles = [
     'accordion.php',
     'logo.php',
     'markdown.php',
+    'codeblock.php',
+    'anchor.php',
     // Form field blocks
     'checkbox.php',
     'inputfield.php',

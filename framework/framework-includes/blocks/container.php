@@ -7,6 +7,9 @@
  * @param string $class - Additional CSS classes (optional)
  * @param string $style - Inline styles (optional)
  * @param string $width - Container width: 'full', 'wide', 'narrow' (default: 'wide')
+ * 
+ * Note: New properties (display_type, horizontal_align, flow_direction, background, 
+ * border, corner_radius, shadow) are handled via inline styles passed in $style parameter
  */
 
 function block_container($content, $class = '', $style = '', $width = 'wide') {

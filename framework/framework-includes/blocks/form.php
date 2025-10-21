@@ -19,10 +19,12 @@ function block_form($config) {
         $action = '#';
         $method = 'POST';
         $class = '';
+        $style = '';
     } else {
         $action = $config['action'] ?? '#';
         $method = $config['method'] ?? 'POST';
         $class = $config['class'] ?? '';
+        $style = $config['style'] ?? '';
         
         // Check if using legacy fields array or new content approach
         if (isset($config['fields']) && is_array($config['fields'])) {
@@ -42,7 +44,28 @@ function block_form($config) {
         }
     }
     
-    $html = "<form action=\"$action\" method=\"$method\" class=\"block-form $class\">";
+    // For GET forms, extract query parameters from action and add as hidden fields
+    $hiddenFields = '';
+    if (strtoupper($method) === 'GET' && strpos($action, '?') !== false) {
+        $parts = explode('?', $action, 2);
+        $baseAction = $parts[0];
+        $queryString = $parts[1];
+        
+        // Parse query string into parameters
+        parse_str($queryString, $params);
+        
+        // Create hidden fields for each parameter
+        foreach ($params as $key => $value) {
+            $hiddenFields .= "<input type=\"hidden\" name=\"" . htmlspecialchars($key) . "\" value=\"" . htmlspecialchars($value) . "\">";
+        }
+        
+        // Use base action without query string
+        $action = $baseAction;
+    }
+    
+    $styleAttr = $style ? " style=\"$style\"" : '';
+    $html = "<form action=\"$action\" method=\"$method\" class=\"block-form $class\"$styleAttr>";
+    $html .= $hiddenFields;
     $html .= $content;
     $html .= "</form>";
     

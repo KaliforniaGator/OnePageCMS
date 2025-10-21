@@ -21,7 +21,9 @@ $normalBlocks = [
     'media' => ['name' => 'Media', 'icon' => 'fas fa-image'],
     'social' => ['name' => 'Social', 'icon' => 'fas fa-share-alt'],
     'logo' => ['name' => 'Logo', 'icon' => 'fas fa-tag'],
-    'markdown' => ['name' => 'Markdown', 'icon' => 'fab fa-markdown']
+    'markdown' => ['name' => 'Markdown', 'icon' => 'fab fa-markdown'],
+    'codeblock' => ['name' => 'Codeblock', 'icon' => 'fas fa-code'],
+    'anchor' => ['name' => 'Anchor', 'icon' => 'fas fa-anchor']
 ];
 
 $formBlocks = [

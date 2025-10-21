@@ -198,6 +198,30 @@
                             pageContainer.classList.add(transitionClass);
                         });
                         
+                        // Execute inline scripts (innerHTML doesn't auto-execute them)
+                        // Wait for next tick to ensure DOM is fully updated
+                        setTimeout(function() {
+                            const scripts = pageContainer.querySelectorAll('script:not([data-executed])');
+                            scripts.forEach(function(oldScript) {
+                                try {
+                                    const newScript = document.createElement('script');
+                                    Array.from(oldScript.attributes).forEach(function(attr) {
+                                        newScript.setAttribute(attr.name, attr.value);
+                                    });
+                                    // Wrap script content in IIFE to avoid global scope conflicts
+                                    if (oldScript.classList.contains('codeblock-js')) {
+                                        newScript.textContent = '(function(){' + oldScript.textContent + '})();';
+                                    } else {
+                                        newScript.textContent = oldScript.textContent;
+                                    }
+                                    newScript.setAttribute('data-executed', 'true');
+                                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                                } catch (e) {
+                                    console.error('Error executing script:', e);
+                                }
+                            });
+                        }, 0);
+                        
                         // Update browser history
                         window.history.pushState({}, '', url);
                         
