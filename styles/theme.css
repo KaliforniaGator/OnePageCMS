@@ -131,14 +131,14 @@
 /* Dark Theme (Optional - uncomment to enable) */
 /*
 [data-theme="dark"] {
-    --color-text-primary: #f8f9fa;
-    --color-text-secondary: #dee2e6;
-    --color-text-muted: #adb5bd;
-    --color-bg-primary: #212529;
-    --color-bg-secondary: #343a40;
-    --color-bg-dark: #1a1d20;
-    --color-border: #495057;
-    --color-border-light: #343a40;
-    --color-border-dark: #6c757d;
+    --color-text-primary: #333333;
+    --color-text-secondary: #666666;
+    --color-text-muted: #999999;
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f5f5f5;
+    --color-bg-dark: #183764;
+    --color-border: #dddddd;
+    --color-border-light: #eeeeee;
+    --color-border-dark: #cccccc;
 }
 */
